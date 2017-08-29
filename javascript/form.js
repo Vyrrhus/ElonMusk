@@ -19,6 +19,7 @@ hPeri.addEventListener('blur', function parametre() {
     departForm.elements['parameter'].value = (2 * Apo * Peri)/(Apo + Peri) ;
     }
     else {
+        alert("Tu crois sérieusement que le périgée peut être plus grand que l'apogée ?");
         hPeri.value=hApo.value;
         parametre()
     }
@@ -32,6 +33,7 @@ hApo.addEventListener('blur', function parametre() {
     departForm.elements['parameter'].value = (2 * Apo * Peri)/(Apo + Peri) ;
     }
     else {
+        alert("Tu crois sérieusement que l'apogée peut être plus petit que le périgée ?");
         hApo.value=hPeri.value;
         parametre()
     }
