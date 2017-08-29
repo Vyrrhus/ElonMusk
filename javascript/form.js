@@ -20,7 +20,7 @@ hPeri.addEventListener('blur', function parametre() {
     }
     else {
         alert("Tu crois sérieusement que le périgée peut être plus grand que l'apogée ?");
-        hPeri.value=hApo.value;
+        hApo.value=hPeri.value;
         parametre()
     }
 });
@@ -34,7 +34,7 @@ hApo.addEventListener('blur', function parametre() {
     }
     else {
         alert("Tu crois sérieusement que l'apogée peut être plus petit que le périgée ?");
-        hApo.value=hPeri.value;
+        hPeri.value=hApo.value;
         parametre()
     }
 });
