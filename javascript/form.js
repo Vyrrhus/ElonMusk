@@ -25,7 +25,7 @@ hPeri.addEventListener('blur', function parametre() {
     }
     var a = Apo + Peri;
     var periode = 2 * Math.PI * Math.sqrt(a*a*a/398600.4418);
-    document.getElementById('periode').innerHTML = periode;
+    document.getElementById('periode').innerHTML = periode + "s";
 });
 
 hApo.addEventListener('blur', function parametre() {
@@ -42,6 +42,6 @@ hApo.addEventListener('blur', function parametre() {
     }
     var a = Apo + Peri;
     var periode = 2 * Math.PI * Math.sqrt(a*a*a/398600.4418);
-    document.getElementById('periode').innerHTML = periode;
+    document.getElementById('periode').innerHTML = periode + "s" ;
 });
 
