@@ -40,5 +40,8 @@ hApo.addEventListener('blur', function parametre() {
         hPeri.value=hApo.value;
         parametre()
     }
+    var a = Apo + Peri;
+    var periode = 2 * Math.PI * Math.sqrt(a*a*a/398600.4418);
+    document.getElementById('periode').innerHTML = periode;
 });
 
