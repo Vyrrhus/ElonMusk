@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    
     <link href="stylesheet/bootstrap.css" rel="stylesheet">
-    <title>Elon Musk</title>
+    <title>Lambert's solver</title>
  <!--   <style type="text/css">
       [class*="col-"] {
       background-color: lightgreen;
@@ -18,7 +20,7 @@
   <body>
     <div class="container">
       <header class="page-header">
-        <h1> Solveur de Lambert </h1>
+        <h1> Solveur de Lambert <small>powered for Candice</small></h1>
         <p> Résolution à n tours sur des orbites képleriennes
         </p>
       </header>
@@ -27,13 +29,14 @@
         <div class="col-lg-12">
           <section>
               <h3> Qu'est-ce qu'un solveur de Lambert ? </h3>
-                <p> 
+                <p class="text-justify"> 
                     Le solveur est un outil capable de résoudre le problème dit de Lambert, que l'on pose ainsi :
                 </p>
               <blockquote>
-                    Sachant la position initiale et la position finale d'un corps en orbite et la durée de trajet entre ces deux positions, quelle est la trajectoire parcourue par le corps ?
+                  <p class="text-justify">Sachant la position initiale et la position finale d'un corps en orbite et la durée de trajet entre ces deux positions, quelle est la trajectoire parcourue par le corps ?</p>
+                  <footer>Lambert</footer>
               </blockquote>
-              <p> 
+              <p class="text-justify"> 
                     En d'autres termes, il permet de calculer les paramètres d'une orbite en connaissant seulement deux positions successives de cette orbite et la durée entre les deux positions.
                   <br>
                     La résolution du problème, cependant, demande quelques simplifications avec la réalité : on parle donc d'orbites képlériennes, c'est-à-dire des orbites elliptiques ou hyperboliques. Ainsi, pour calculer une trajectoire interplanétaire, on devra utiliser des orbites successives en supposant que la trajectoire traverse plusieurs "sphères d'influence" au sein desquelles se trouvent uniquement deux corps : l'objet étudié, parcourant la trajectoire que l'on souhaite calculer, et l'astre attracteur. 
@@ -42,7 +45,7 @@
                     Ainsi, il sera possible d'itérer le calcul pour converger vers une solution satisfaisante avec des approximations plus faibles.
               </p>
             <h3> Procédure à suivre </h3>
-              <ol>
+              <ol class="text-justify">
                   <li>Renseignez les paramètres de départ, option coordonnées pour une simple trajectoire, orbite de départ pour un transfert interplanétaire.</li>
                   <li>Renseignez les paramètres d'arrivée ou les coordonnées à atteindre pour une simple trajectoire.</li>
                   <li>Rajoutez les informations complémentaires : fenêtre de départ, fenêtre d'arrivée, durée maximale du trajet, nombre de tours...</li>
@@ -71,108 +74,113 @@
     
         <div class="row">
         <h3 id="grotitre">Paramètres de la mission</h3>
-            <form class="form-horizontal col-lg-6" id="form_depart">
+            <h3 class="visible-lg">lg</h3>
+            <h3 class="visible-md">md</h3>
+            <h3 class="visible-sm">sm</h3>
+            <h3 class="visible-xs">xs</h3>
+            <form class="form-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-6" id="form_depart">
                 <h4>Départ</h4>
                 <fieldset>
                 <div class="form-group">
-                    <label class="col-lg-7 control-label" for="origine">Origine</label>
-                    <div class="col-lg-5 form-inline form-group">
+                    <label class="col-lg-4 col-md-4 col sm-4 col-xs-4 control-label" for="origine">Origine</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline form-group">
                         <select id="origine" class="form-control"></select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-7 control-label" for="inclinaison">Inclinaison</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="inclinaison" value="0">
-                        <span class="input-group-addon" title="Inclinaison du plan d'orbite">°</span>
+                    <div class="row"></div>
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="inclinaison">Inclinaison</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="inclinaison" placeholder="0" onfocus='this.select()'>
+                        <span class="input-group-addon">°</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="longitude">Longitude du noeud ascendant</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="longitude" value="0">
-                        <span class="input-group-addon" title="Angle par rapport au point vernal">°</span>
+                    <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="longitude">Longitude du NA</label>
+                    <label class="visible-sm col-sm-4 control-label" for="longitude">Long. du NA</label>
+                    <label class="visible-xs col-xs-4 control-label" for="longitude">&Omega;</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" disabled="true" id="longitude" placeholder="0">
+                        <span class="input-group-addon">°</span>
+                    </div> 
+                    <label id="labelperi" class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="perigee">Périgée (altitude)</label>
+                    <label id="labelperi" class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="perigee">Périgée</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="perigee" name="distance_group" placeholder="100">
+                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="perigee">Périgée</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="perigee" value="100">
-                        <span class="input-group-addon" title="Altitude par rapport à la surface">km</span>
+                    <label id="labelapo" class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="apogee">Apogée (altitude)</label>
+                    <label id="labelapo" class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="apogee">Apogée</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="apogee" name="distance_group" placeholder="100">
+                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="apogee">Apogée</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="apogee" value="100">
-                        <span class="input-group-addon" title="Altitude par rapport à la surface">km</span>
+                    <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="parameter">Demi grand-axe</label>
+                    <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="parameter">a</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="demiaxe" name="distance_group" disabled="true" placeholder="6471.008">
+                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="ecc">Excentricité</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="ecc" value="0">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="ecc">Excentricité</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="ecc" disabled="true" placeholder="0">
                     </div>
-                    <p class="help-block"> Modifiez le périgée et l'apogée pour modifier automatiquement e !</p>
-                    <label class="col-lg-7 control-label" for="parameter">Paramètre de la conique</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="parameter" value="6471.008">
+                    <label class="col-lg-4 visible-lg control-label" for="argument">Argument du périgée</label>
+                    <label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="argument">&omega;</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="argument" placeholder="0">
+                        <span class="input-group-addon">°</span>
                     </div>
-                    <p class="help-block"> Modifiez le périgée et l'apogée pour modifier automatiquement p !</p>
-                  <h3> Période de l'orbite : </h3>
-                  <span id="periode"></span>
-                    <label class="col-lg-7 control-label" for="argument">Argument du périgée</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="argument" value="0">
-                        <span class="input-group-addon" title="Angle par rapport à la ligne des noeuds">°</span>
-                    </div>
-                    <label class="col-lg-7 control-label" for="anomaly">Anomalie vraie</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="anomaly">
-                        <span class="input-group-addon" title="Anomalie vraie par rapport au périgée">rad</span>
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="anomaly">Anomalie vraie</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="anomaly" placeholder="0">
+                        <span class="input-group-addon">rad</span>
                     </div>
                 </div>    
                 </fieldset>
             </form>
-            <form class="form-horizontal col-lg-6 hidden" id="form_arrivee">
+            <form class="form-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-6" id="form_arrivee">
                 <h4>Arrivée</h4>
                 <fieldset>
                 <div class="form-group">
-                    <label class="col-lg-7 control-label" for="origine">Origine</label>
-                    <div class="col-lg-5 form-inline form-group">
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline form-group">
                         <select id="origine" class="form-control"></select>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-7 control-label" for="inclinaison">Inclinaison</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="inclinaison" value="0" data-placement="right">
-                        <span class="input-group-addon" title="Inclinaison du plan d'orbite">°</span>
+                    <label class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" onfocus='this.select()' id="inclinaison" placeholder="0">
+                        <span class="input-group-addon">°</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="longitude">Longitude du noeud ascendant</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="longitude" value="0" data-placement="right">
-                        <span class="input-group-addon" title="Angle par rapport au point vernal">°</span>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" disabled="true" id="longitude" value="0">
+                        <span class="input-group-addon">°</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="perigee">Périgée</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="perigee" value="100" data-placement="right">
-                        <span class="input-group-addon" title="Altitude par rapport à la surface">km</span>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="perigee" name="distance_group" value="100">
+                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="apogee">Apogée</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="apogee" value="100" data-placement="right">
-                        <span class="input-group-addon" title="Altitude par rapport à la surface">km</span>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="apogee" name="distance_group" value="100">
+                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="ecc">Excentricité</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="ecc" data-placement="right">
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="demiaxe" name="distance_group" disabled="true" value="6471.008">
+                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="parameter">Paramètre de la conique</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="parameter" data-placement="right">
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="ecc" disabled="true" value="0">
                     </div>
-                    <label class="col-lg-7 control-label" for="argument">Argument du périgée</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="argument" data-placement="right">
-                        <span class="input-group-addon" title="Angle par rapport à la ligne des noeuds">°</span>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="argument" value="0">
+                        <span class="input-group-addon">°</span>
                     </div>
-                    <label class="col-lg-7 control-label" for="anomaly">Anomalie vraie</label>
-                    <div class="col-lg-5 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="anomaly" data-placement="right">
-                        <span class="input-group-addon" title="Anomalie vraie par rapport au périgée">rad</span>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
+                        <input type="text" class="form-control" id="anomaly">
+                        <span class="input-group-addon">rad</span>
                     </div>
                 </div>    
                 </fieldset>
@@ -196,8 +204,9 @@
       <p>
         Je ne remercierai jamais assez Pierre-Adrien pour son savoir-faire et Camille LEONI pour son <strong>charme</strong>.
       </p>
+        <span id="clickme">Cliquez-moi !</span>
     </footer>
       </div>
-      <script src="javascript/form.js"></script>
+      <script src="form.js"></script>
     </body>
 </html>
