@@ -79,110 +79,148 @@
             <h3 class="visible-sm">sm</h3>
             <h3 class="visible-xs">xs</h3>
             <form class="form-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-6" id="form_depart">
-                <h4>Départ</h4>
+                <h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">Départ</h3>
                 <fieldset>
                 <div class="form-group">
-                    <label class="col-lg-4 col-md-4 col sm-4 col-xs-4 control-label" for="origine">Origine</label>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline form-group">
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 col-md-4 col sm-4 col-xs-4 control-label" for="origine">Origine</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                            <select id="origine" class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="inclinaison">Inclinaison</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="inclinaison" placeholder="0" onfocus='this.select()'>
+                            <span class="input-group-addon">°</span>
+                        </div>
+                        <div hidden>
+                            <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un angle entre -180° et 180° !</p>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="longitude">Longitude du NA</label>
+                        <label class="visible-sm col-sm-4 control-label" for="longitude">Long. du NA</label>
+                        <label class="visible-xs col-xs-4 control-label" for="longitude">&Omega;</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" disabled="true" id="longitude" placeholder="0">
+                            <span class="input-group-addon">°</span>
+                        </div>
+                        <div hidden>
+                        <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un angle entre 0° et 360° !</p>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label id="labelperi" class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="perigee">Périgée (altitude)</label>
+                        <label id="labelperi" class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="perigee">Périgée</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="perigee" name="distance_group" placeholder="100">
+                            <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
+                        </div>
+                        <div hidden="true">
+                        <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre positif !</p>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label id="labelapo" class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="apogee">Apogée (altitude)</label>
+                        <label id="labelapo" class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="apogee">Apogée</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="apogee" name="distance_group" placeholder="100">
+                            <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
+                        </div>
+                        <div hidden>
+                        <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre positif !</p>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="parameter">Demi grand-axe</label>
+                        <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="parameter">a</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="demiaxe" name="distance_group" disabled="true" placeholder="6471.008">
+                            <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="ecc">Excentricité</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="ecc" disabled="true" placeholder="0">
+                        </div>
+                        <div hidden>
+                        <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre entre 0 et 1 !</p>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 visible-lg control-label" for="argument">Argument du périgée</label>
+                        <label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="argument">&omega;</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="argument" placeholder="0">
+                            <span class="input-group-addon">°</span>
+                        </div>
+                        <div hidden>
+                        <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un angle entre 0° et 360° !</p>
+                        </div>
+                    </div>
+                    <div class="form-inline form-group">
+                        <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="anomaly">Anomalie vraie</label>
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
+                            <input type="text" class="form-control" id="anomaly" placeholder="0">
+                            <span class="input-group-addon">rad</span>
+                        </div>
+                        <div hidden>
+                        <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre positif !</p>
+                        </div>
+                    </div>
+                    </div>
+                    </fieldset>
+            </form>
+            <form class="form-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-6" id="form_arrivee">
+                <h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">Arrivée</h3>
+                <fieldset>
+                <div class="form-group">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+                    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 form-inline form-group">
                         <select id="origine" class="form-control"></select>
                     </div>
-                    <div class="row"></div>
-                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="inclinaison">Inclinaison</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="inclinaison" placeholder="0" onfocus='this.select()'>
                         <span class="input-group-addon">°</span>
                     </div>
-                    <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="longitude">Longitude du NA</label>
-                    <label class="visible-sm col-sm-4 control-label" for="longitude">Long. du NA</label>
-                    <label class="visible-xs col-xs-4 control-label" for="longitude">&Omega;</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" disabled="true" id="longitude" placeholder="0">
                         <span class="input-group-addon">°</span>
                     </div> 
-                    <label id="labelperi" class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="perigee">Périgée (altitude)</label>
-                    <label id="labelperi" class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="perigee">Périgée</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="perigee" name="distance_group" placeholder="100">
                         <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label id="labelapo" class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="apogee">Apogée (altitude)</label>
-                    <label id="labelapo" class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="apogee">Apogée</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="apogee" name="distance_group" placeholder="100">
                         <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="parameter">Demi grand-axe</label>
-                    <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="parameter">a</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="demiaxe" name="distance_group" disabled="true" placeholder="6471.008">
                         <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
                     </div>
-                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="ecc">Excentricité</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="ecc" disabled="true" placeholder="0">
                     </div>
-                    <label class="col-lg-4 visible-lg control-label" for="argument">Argument du périgée</label>
-                    <label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="argument">&omega;</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="argument" placeholder="0">
                         <span class="input-group-addon">°</span>
                     </div>
-                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="anomaly">Anomalie vraie</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
                         <input type="text" class="form-control" id="anomaly" placeholder="0">
                         <span class="input-group-addon">rad</span>
                     </div>
-                </div>    
-                </fieldset>
-            </form>
-            <form class="form-horizontal col-lg-6 col-md-6 col-sm-6 col-xs-6" id="form_arrivee">
-                <h4>Arrivée</h4>
-                <fieldset>
-                <div class="form-group">
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline form-group">
-                        <select id="origine" class="form-control"></select>
                     </div>
-                    <label class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></label>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" onfocus='this.select()' id="inclinaison" placeholder="0">
-                        <span class="input-group-addon">°</span>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" disabled="true" id="longitude" value="0">
-                        <span class="input-group-addon">°</span>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="perigee" name="distance_group" value="100">
-                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="apogee" name="distance_group" value="100">
-                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="demiaxe" name="distance_group" disabled="true" value="6471.008">
-                        <span class="input-group-addon" title="Cliquez pour changer l'unité" name="altitude_unit">km</span>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="ecc" disabled="true" value="0">
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="argument" value="0">
-                        <span class="input-group-addon">°</span>
-                    </div>
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-inline input-group form-group">
-                        <input type="text" class="form-control" id="anomaly">
-                        <span class="input-group-addon">rad</span>
-                    </div>
-                </div>    
                 </fieldset>
             </form>
         </div>
