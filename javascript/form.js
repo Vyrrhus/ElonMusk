@@ -1,11 +1,5 @@
-//Déclaration des variables globales
-var formStart = document.getElementById('form_start');
-var origine_data = [0,0,0,0,0,0,0,0,0,6371.008]; //origine_data [name, reference_body, i, W, a, e, w, v, masse, radius]; //d'où on extrait le rayon
-var rayon = 6371.008; // à supprimer après je pense
-var UA = 149597870.7;
-var inputCheck = [false, false, false, false];
-
 //Déclaration des nodes input & select
+var formStart = document.getElementById('form_start');
 var origine = formStart.elements['origine'];
 var inclination = formStart.elements['input_inclination'];
 var longitude = formStart.elements['input_longitude'];
@@ -17,6 +11,7 @@ var argument_periapsis = formStart.elements['input_argument_periapsis'];
 var true_anomaly = formStart.elements['input_true_anomaly'];
 var parameter = [periapsis, apoapsis, semi_majoraxis, eccentricity];
 var inputs = [inclination, longitude, periapsis, apoapsis, semi_majoraxis, eccentricity, argument_periapsis, true_anomaly];
+var optionEarth = document.getElementById('planet_default');
 
 //Déclaration des nodes span
 var angular_unit = document.getElementsByName('angular_unit');
@@ -26,11 +21,17 @@ var alt = document.getElementsByName('alt');
 //Déclaration des boutons
 var reset_button = document.getElementById('reset');
 
+//Déclaration des variables globales
+var body = planets[0];
+var UA = 149597870.7; // km
+var Pi = Math.PI;
+var inputCheck = [false, false, false, false];
+
 //Déclaration des fonctions
-function isNumber(element, notNegative) {
+function isNumber(element, popNegative) {
     var value = element.value;
     var condition = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-'];
-    if (notNegative) {
+    if (popNegative) {
         condition.pop();
     }
     var error = 0;
@@ -64,13 +65,27 @@ function unitIs(input_element) {
     }
 }
 
-function belongsTo(element, min, max) {
+function belongsTo(element, isAltitudeSet, min, max) {
     var value = parseFloat(element.value);
-    if ((value <= max && value >= min) || isNaN(value)) {
-        return true;
+    var unit = unitIs(element);
+    var rayon = body.radius;
+    if (unit == 'UA') {
+        min = convert(min, 'km');
+        max = convert(max, 'km');
+        rayon = convert(rayon, 'km');
+    }
+    if (unit == "rad") {
+        min = convert(min,'°');
+        max = convert(max, '°');
+    }
+    if (!isAltitudeSet) {
+        min += rayon;
+    }
+    if (value > max || value < min) {
+        return false;
     }
     else {
-        return false;
+        return true;
     }
 }
 
@@ -84,13 +99,9 @@ function isNull(element) {
     }
 }
 
-function convert(element, unit) {
-    var Pi = Math.PI;
-    var value = parseFloat(element.value);
-    if (isNaN(value) || !isNumber(element)) {
-        element.value = '';
-        removeWarning(element);
-        return false;
+function convert(value, unit) {
+    if (isNaN(value)) {
+        return '';
     }
     switch (unit) {
         case 'km' :
@@ -106,17 +117,18 @@ function convert(element, unit) {
             value = value / Pi * 180;
             break;
     }
-    element.value = value;
+    return value;
 }
 
-function swap(element, unit, isAltitude) {
+function swapAltitude(element, unit, isAltitudeSet) {
     var value = parseFloat(element.value);
+    var rayon = body.radius;
     if (isNaN(value) || !isNumber(element)) {
         element.value = '';
         removeWarning(element);
         return false;
     }
-    if (isAltitude) {
+    if (isAltitudeSet) {
         if (unit == 'km') {
             value += rayon;
         }
@@ -152,17 +164,23 @@ function removeWarning(element) {
     div_hidden.setAttribute('hidden', 'true');
 }
 
-function disable(element) {
-    element.setAttribute('disabled', 'true');
+function disable() {
+    for (let k = 0, c = arguments.length ; k < c ; k++) {
+        arguments[k].setAttribute('disabled', 'true');
+    }
 }
 
-function enable(element) {
-    element.removeAttribute('disabled');
+function enable() {
+    for (let k = 0, c = arguments.length ; k < c ; k++) {
+        arguments[k].removeAttribute('disabled');
+    }
 }
 
-function reset(element) {
-    element.value = '';
-    removeWarning(element);
+function reset() {
+    for (let k = 0, c = arguments.length ; k < c ; k++) {
+        arguments[k].value = '';
+        removeWarning(arguments[k]);
+    }
 }
 
 function isEnough() {
@@ -200,8 +218,8 @@ function isComputable(notNegative) {
     }
 }
 
-function setArgumentPeriapsis() {
-    if (parseFloat(parameter[3].value) == 0 || parameter[3].value == '' ) {
+function setArgumentPeriapsis(bypass) {
+    if (parseFloat(parameter[3].value) == 0 || parameter[3].value == '' || bypass) {
         disable(argument_periapsis);
         reset(argument_periapsis);
         removeWarning(argument_periapsis);
@@ -210,172 +228,115 @@ function setArgumentPeriapsis() {
         enable(argument_periapsis);
     }
 }
-    
 
-function compute(fromGround) {
-    switch (inputCheck.join(', ')) {
-        case 'true, true, false, false' :
-            disable(semi_majoraxis);
-            disable(eccentricity);
-            Pe = parseFloat(periapsis.value);
-            Ap = parseFloat(apoapsis.value);
-            if (fromGround) {
-                Pe += rayon;
-                Ap += rayon;
-            }
-            if (Pe > Ap) {
-                reset(semi_majoraxis);
-                reset(eccentricity);
-                setWarning(periapsis, ' ');
-                setWarning(apoapsis, ' ');
-                return false;
-            }
-            else {
-                removeWarning(periapsis);
-                removeWarning(apoapsis);
-            }
-            a = (Ap + Pe) / 2;
-            e = (Ap - Pe) / ( 2 * a);
-            semi_majoraxis.value = a;
-            eccentricity.value = e;
-            break;
-            
-        case 'true, false, true, false' :
-            disable(apoapsis);
-            disable(eccentricity);
-            Pe = parseFloat(periapsis.value);
-            a = parseFloat(semi_majoraxis.value);
-            if (fromGround) {
-                Pe += rayon;
-            }
-            Ap = 2 * a - Pe;
-            e = (Ap - Pe) / (2*a);
-            if (fromGround) {
-                Ap -= rayon;
-                Pe -= rayon;
-            }
-            if (Ap < Pe) {
-                reset(apoapsis);
-                reset(eccentricity);
-                setWarning(periapsis, ' ');
-                setWarning(semi_majoraxis, ' ');
-                return false;
-            }
-            else {
-                removeWarning(periapsis);
-                removeWarning(semi_majoraxis);
-            }
-            apoapsis.value = Ap;
-            eccentricity.value = e;
-            break;
-            
-        case 'true, false, false, true' :
-            disable(apoapsis);
-            disable(semi_majoraxis);
-            Pe = parseFloat(periapsis.value);
-            e = parseFloat(eccentricity.value);
-            if (fromGround) {
-                Pe += rayon;
-            }
-            Ap = Pe * (1+e) / (1-e);
-            a = (Ap + Pe) / 2;
-            if (inputUnit == 'km') {
-                Ap -= rayon;
-                Pe -= rayon;
-            }
-            apoapsis.value = Ap;
-            semi_majoraxis.value = a;
-            break;
-            
-        case 'false, true, true, false' :
-            disable(periapsis);
-            disable(eccentricity);
-            Ap = parseFloat(apoapsis.value);
-            a = parseFloat(semi_majoraxis.value);
-            if (fromGround) {
-                Ap += rayon;
-            }
-            Pe = 2*a - Ap;
-            e = (Ap - Pe) / (2*a);
-            if (fromGround) {
-                Pe -= rayon;
-                Ap -= rayon;
-            }
-            if (Pe > Ap || Pe < 0 || (!fromGround && Pe < rayon/UA )) {
-                reset(periapsis);
-                reset(eccentricity);
-                setWarning(semi_majoraxis, ' ');
-                setWarning(apoapsis, ' ');
-                return false;
-            }
-            else {
-                removeWarning(semi_majoraxis);
-                removeWarning(apoapsis);
-            }
-            periapsis.value = Pe;
-            eccentricity.value = e;
-            break;
-            
-        case 'false, true, false, true' :
-            disable(periapsis);
-            disable(semi_majoraxis);
-            Ap = parseFloat(apoapsis.value);
-            e = parseFloat(eccentricity.value);
-            if (fromGround) {
-                Ap += rayon;
-            }
-            Pe = Ap * (1-e) / (1+e);
-            a = (Ap + Pe) / 2;
-            if (fromGround) {
-                Pe -= rayon;
-                Ap -= rayon;
-            }
-            if (Pe < 0 || Pe > Ap || (!fromGround && Pe < rayon/UA )) {
-                reset(periapsis);
-                reset(semi_majoraxis);
-                setWarning(apoapsis, ' ');
-                setWarning(eccentricity, ' ');
-                return false;
-            }
-            else {
-                removeWarning(apoapsis);
-                removeWarning(eccentricity);
-            }
-            periapsis.value = Pe;
-            semi_majoraxis.value = a;
-            break;
-            
-        case 'false, false, true, true' :
-            disable(periapsis);
-            disable(apoapsis);
-            a = parseFloat(semi_majoraxis.value);
-            e = parseFloat(eccentricity.value);
-            Ap = a * (1+e);
-            Pe = a * (1-e);
-            if (fromGround) {
-                Ap -= rayon;
-                Pe -= rayon;
-            }
-            if (Pe < 0 || Pe > Ap || (!fromGround && Pe < rayon/UA )) {
-                reset(periapsis);
-                reset(apoapsis);
-                setWarning(semi_majoraxis, ' ');
-                setWarning(eccentricity, ' ');
-                return false;
-            }
-            else {
-                removeWarning(semi_majoraxis);
-                removeWarning(eccentricity);
-            }
-            periapsis.value = Pe;
-            apoapsis.value = Ap;
-            break;
+function compute(isAltitudeSet) {
+    var unit = unitIs(periapsis);
+    var rayon = body.radius;
+    if (!isAltitudeSet) {
+        rayon = 0;
     }
-    return true;
-}
-
-function origine_data() {
-    
+    if (unit == 'UA') {
+        rayon = convert(rayon, 'km');
+    }
+    for (let k = 0, c = parameter.length ; k < c ; k++) {
+        if (!inputCheck[k]) {
+            disable(parameter[k]);
+        }
+    }
+    switch(inputCheck.join(', ')) {
+        case 'true, true, false, false' :
+            var Pe = parseFloat(periapsis.value) + rayon;
+            var Ap = parseFloat(apoapsis.value) + rayon;
+            var a = (Ap + Pe) / 2;
+            var e = (Ap - Pe) / (Ap + Pe);
+            if (Pe > Ap) {
+                reset(semi_majoraxis, eccentricity);
+                setWarning(periapsis, ' ');
+                setWarning(apoapsis, ' ');
+            }
+            else {
+                removeWarning(periapsis);
+                removeWarning(apoapsis);
+                semi_majoraxis.value = a;
+                eccentricity.value = e;
+            }
+            break;
+        case 'true, false, true, false' :
+            var Pe = parseFloat(periapsis.value) + rayon;
+            var a = parseFloat(semi_majoraxis.value);
+            var Ap = 2*a - Pe;
+            var e = (Ap-Pe)/(2*a);
+            if (Pe > Ap) {
+                reset(apoapsis, eccentricity);
+                setWarning(periapsis, ' ');
+                setWarning(semi_majoraxis, ' ');
+            }
+            else {
+                removeWarning(periapsis);
+                removeWarning(semi_majoraxis);
+                apoapsis.value = Ap - rayon;
+                eccentricity.value = e;
+            }
+            break;
+        case 'true, false, false, true' :
+            var Pe = parseFloat(periapsis.value)+rayon;
+            var e = parseFloat(eccentricity.value);
+            var Ap = Pe*(1+e)/(1-e);
+            var a = (Ap+Pe)/2;
+            apoapsis.value = Ap - rayon;
+            semi_majoraxis.value = a;
+            break;
+        case 'false, true, true, false' :
+            var Ap = parseFloat(apoapsis.value) + rayon;
+            var a = parseFloat(semi_majoraxis.value);
+            var Pe = 2*a-Ap;
+            var e = (Ap-Pe)/(Ap+Pe);
+            if (Pe > Ap || Pe < rayon) {
+                reset(periapsis, eccentricity);
+                setWarning(apoapsis, ' ');
+                setWarning(semi_majoraxis, ' ');
+            }
+            else {
+                removeWarning(apoapsis);
+                removeWarning(semi_majoraxis);
+                periapsis.value = Pe - rayon;
+                eccentricity.value = e;
+            }
+            break;
+        case 'false, true, false, true' :
+            var Ap = parseFloat(apoapsis.value) + rayon;
+            var e = parseFloat(eccentricity.value);
+            var Pe = Ap*(1-e)/(1+e);
+            var a = (Ap+Pe)/2;
+            if (Pe > Ap ||Pe < rayon) {
+                reset(periapsis, semi_majoraxis);
+                setWarning(apoapsis, ' ');
+                setWarning(eccentricity, ' ');
+            }
+            else {
+                removeWarning(apoapsis);
+                removeWarning(eccentricity);
+                periapsis.value = Pe - rayon;
+                semi_majoraxis.value = a;
+            }
+            break;
+        case 'false, false, true, true' :
+            var a = parseFloat(semi_majoraxis.value);
+            var e = parseFloat(eccentricity.value);
+            var Ap = a*(1+e);
+            var Pe = a*(1-e);
+            if (Pe > Ap || Pe < rayon) {
+                reset(apoapsis, periapsis);
+                setWarning(semi_majoraxis, ' ');
+                setWarning(eccentricity, ' ');
+            }
+            else {
+                removeWarning(semi_majoraxis);
+                removeWarning(eccentricity);
+                periapsis.value = Pe - rayon;
+                apoapsis.value = Ap - rayon;
+            }
+    }
 }
 
 //Déclaration du popover
@@ -384,28 +345,36 @@ $(document).ready(function() {
 });
 
 //Déclaration des events :
-//INPUT
+// SELECT
+origine.addEventListener('change', function() {
+    body = origine.value;
+    parameter.forEach(function(element) {
+        enable(element);
+        reset(element);
+    });
+    reset(argument_periapsis);
+    disable(argument_periapsis);
+    inputCheck = [false, false, false, false];
+    for (let k = 0, c = planets.length ; k < c ; k++) {
+        if (planets[k].name == body) {
+            body = planets[k];
+            return false;
+        }
+    }
+})
 
+//INPUT
 inclination.addEventListener('keyup', function() {
     var unit = unitIs(this);
-    switch (unit) {
-        case '°':
-            var min = -180;
-            var max = 180
-            break;
-        case 'rad':
-            var min = - Math.PI;
-            var max = Math.PI;
-            break;
-    }
+    var min = -180;
+    var max = 180;
     if (!isNumber(this)) {
         setWarning(this,"Vous devez entrer un angle !");
         disable(longitude);
         reset(longitude);
-        removeWarning(longitude);
     }
     else {
-        if (!belongsTo(this, min, max)) {
+        if (!belongsTo(this, true, min, max)) {
             switch (unit) {
                 case '°':
                     setWarning(this, "L'angle doit être compris entre -180° et 180° !");
@@ -415,15 +384,13 @@ inclination.addEventListener('keyup', function() {
             }
             disable(longitude);
             reset(longitude);
-            removeWarning(longitude);
         }
         else {
             value = parseFloat(this.value);
             removeWarning(this);
-            if (isNaN(value) || value == 0) {
+            if (isNull(this) || parseFloat(this.value) == 0 || this.value == '-') {
                 disable(longitude);
                 reset(longitude);
-                removeWarning(longitude);
             }
             else {
                 enable(longitude);
@@ -434,21 +401,13 @@ inclination.addEventListener('keyup', function() {
 
 longitude.addEventListener('keyup', function() {
     var unit = unitIs(this);
-    switch (unit) {
-        case '°':
-            var min = 0;
-            var max = 360;
-            break;
-        case 'rad':
-            var min = 0;
-            var max = 2 * Math.PI;
-            break;
-    }
+    var min = 0;
+    var max = 360;
     if (!isNumber(this, true)) {
         setWarning(this,"Vous devez entrer un angle positif !");
     }
     else {
-        if (!belongsTo(this, min, max)) {
+        if (!belongsTo(this, true, min, max)) {
             switch (unit) {
                 case '°':
                     setWarning(this, "L'angle doit être compris entre 0° et 360° !");
@@ -472,22 +431,29 @@ periapsis.addEventListener('keyup', function() {
             if (!inputCheck[k]) {
                 reset(parameter[k]);
             }
+            else if (parameter[k].parentNode.nextElementSibling.firstElementChild.innerHTML == ' ') {
+                removeWarning(parameter[k]);
+            }
         }
         inputCheck[0] = false;
     }
     else {
         inputCheck[0] = true;
+        var unit = unitIs(this);
+        var isAltitudeSet = false;
+        if (this.parentNode.parentNode.firstElementChild.getAttribute('class') == 'altitude') {
+            isAltitudeSet = true;
+        }
         if (!isEnough()) {
             for (let k = 0, c = inputCheck.length ; k < c ; k++) {
                 enable(parameter[k]);
             }
             if (isNumber(this, true)) {
-                var unit = unitIs(this);
-                if (unit == 'UA' && parseFloat(this.value) < rayon/UA) {
-                    setWarning(this, "Le périgée est plus petit que le rayon du corps d'origine !");
+                if (belongsTo(this, isAltitudeSet, 0)) {
+                    removeWarning(this);
                 }
                 else {
-                    removeWarning(this);
+                    setWarning(this, "Le périgée est sous la surface !")
                 }
             }
             else {
@@ -497,8 +463,7 @@ periapsis.addEventListener('keyup', function() {
         else {
             if (isComputable(true)) {
                 removeWarning(this);
-                var unit = unitIs(this);
-                compute(unit);
+                compute(isAltitudeSet);
             }
             else {
                 for (let k = 0, c = inputCheck.length ; k < c ; k++) {
@@ -507,7 +472,12 @@ periapsis.addEventListener('keyup', function() {
                     }
                 }
                 if (isNumber(this, true)) {
-                    removeWarning(this);
+                    if (belongsTo(this, isAltitudeSet, 0)) {
+                        removeWarning(this);
+                    }
+                    else {
+                        setWarning(this, "Le périgée est sous la surface !")
+                    }
                 }
                 else {
                     setWarning(this, "Vous devez entrer un nombre positif !");
@@ -526,17 +496,30 @@ apoapsis.addEventListener('keyup', function() {
             if (!inputCheck[k]) {
                 reset(parameter[k]);
             }
+            else if (parameter[k].parentNode.nextElementSibling.firstElementChild.innerHTML == ' ') {
+                removeWarning(parameter[k]);
+            }
         }
         inputCheck[1] = false;
     }
     else {
         inputCheck[1] = true;
+        var unit = unitIs(this);
+        var isAltitudeSet = false;
+        if (this.parentNode.parentNode.firstElementChild.getAttribute('class') == 'altitude') {
+            isAltitudeSet = true;
+        }
         if (!isEnough()) {
             for (let k = 0, c = inputCheck.length ; k < c ; k++) {
                 enable(parameter[k]);
             }
             if (isNumber(this, true)) {
-                removeWarning(this);
+                if (belongsTo(this, isAltitudeSet, 0)) {
+                    removeWarning(this);
+                }
+                else {
+                    setWarning(this, "L'apogée est sous la surface !")
+                }
             }
             else {
                 setWarning(this, "Vous devez entrer un nombre positif !");
@@ -545,8 +528,7 @@ apoapsis.addEventListener('keyup', function() {
         else {
             if (isComputable(true)) {
                 removeWarning(this);
-                var unit = unitIs(this);
-                compute(unit);
+                compute(isAltitudeSet);
             }
             else {
                 for (let k = 0, c = inputCheck.length ; k < c ; k++) {
@@ -555,7 +537,12 @@ apoapsis.addEventListener('keyup', function() {
                     }
                 }
                 if (isNumber(this, true)) {
-                    removeWarning(this);
+                    if (belongsTo(this, isAltitudeSet, 0)) {
+                        removeWarning(this);
+                    }
+                    else {
+                        setWarning(this, "L'apogée est sous la surface !")
+                    }
                 }
                 else {
                     setWarning(this, "Vous devez entrer un nombre positif !");
@@ -574,17 +561,30 @@ semi_majoraxis.addEventListener('keyup', function() {
             if (!inputCheck[k]) {
                 reset(parameter[k]);
             }
+            else if (parameter[k].parentNode.nextElementSibling.firstElementChild.innerHTML == ' ') {
+                removeWarning(parameter[k]);
+            }
         }
         inputCheck[2] = false;
     }
     else {
         inputCheck[2] = true;
+        var unit = unitIs(this);
+        var isAltitudeSet = false;
+        if (periapsis.parentNode.parentNode.firstElementChild.getAttribute('class') == 'altitude') {
+            isAltitudeSet = true;
+        }
         if (!isEnough()) {
             for (let k = 0, c = inputCheck.length ; k < c ; k++) {
                 enable(parameter[k]);
             }
             if (isNumber(this, true)) {
-                removeWarning(this);
+                if (belongsTo(this, false, 0)) {
+                    removeWarning(this);
+                }
+                else {
+                    setWarning(this, "L'orbite est sous la surface !")
+                }
             }
             else {
                 setWarning(this, "Vous devez entrer un nombre positif !");
@@ -593,8 +593,7 @@ semi_majoraxis.addEventListener('keyup', function() {
         else {
             if (isComputable(true)) {
                 removeWarning(this);
-                var unit = unitIs(this);
-                compute(unit);
+                compute(isAltitudeSet);
             }
             else {
                 for (let k = 0, c = inputCheck.length ; k < c ; k++) {
@@ -603,7 +602,12 @@ semi_majoraxis.addEventListener('keyup', function() {
                     }
                 }
                 if (isNumber(this, true)) {
-                    removeWarning(this);
+                    if (belongsTo(this, false, 0)) {
+                        removeWarning(this);
+                    }
+                    else {
+                        setWarning(this, "L'orbite est sous la surface !")
+                    }
                 }
                 else {
                     setWarning(this, "Vous devez entrer un nombre positif !");
@@ -614,9 +618,8 @@ semi_majoraxis.addEventListener('keyup', function() {
     setArgumentPeriapsis();
 });
 
-// Rajouter la gestion du rayon pour le semi-major-axis
-
 eccentricity.addEventListener('keyup', function() {
+    var bypass = false;
     if (isNull(this)) {
         removeWarning(this);
         for (let k = 0, c = inputCheck.length ; k < c ; k++) {
@@ -624,44 +627,42 @@ eccentricity.addEventListener('keyup', function() {
             if (!inputCheck[k]) {
                 reset(parameter[k]);
             }
+            else if (parameter[k].parentNode.nextElementSibling.firstElementChild.innerHTML == ' ') {
+                removeWarning(parameter[k]);
+            }
         }
         inputCheck[3] = false;
-        disable(argument_periapsis);
-        reset(argument_periapsis);
-        removeWarning(argument_periapsis);
     }
     else {
         inputCheck[3] = true;
+        var unit = unitIs(this);
+        var isAltitudeSet = false;
+        if (periapsis.parentNode.parentNode.firstElementChild.getAttribute('class') == 'altitude') {
+            isAltitudeSet = true;
+        }
         if (!isEnough()) {
             for (let k = 0, c = inputCheck.length ; k < c ; k++) {
                 enable(parameter[k]);
             }
             if (isNumber(this, true)) {
-                if (belongsTo(this, 0, 1)) {
+                if (belongsTo(this, true, 0, 1)) {
                     removeWarning(this);
                 }
                 else {
-                    setWarning(this, "L'excentricité ne peut pas dépasser 1 !")
+                    setArgumentPeriapsis(true);
+                    setWarning(this, "Ce n'est pas une orbite elliptique !");
+                    bypass = true;
                 }
-                enable(argument_periapsis);
             }
             else {
                 setWarning(this, "Vous devez entrer un nombre positif !");
-                disable(argument_periapsis);
-                reset(argument_periapsis);
-                removeWarning(argument_periapsis);
+                bypass = true;
             }
         }
         else {
             if (isComputable(true)) {
-                if (belongsTo(this, 0, 1)) {
-                    removeWarning(this);
-                    var unit = unitIs(periapsis);
-                    compute(unit);
-                }
-                else {
-                    setWarning(this, "L'excentricité ne peut pas dépasser 1 !")
-                }
+                removeWarning(this);
+                compute(isAltitudeSet);
             }
             else {
                 for (let k = 0, c = inputCheck.length ; k < c ; k++) {
@@ -670,39 +671,34 @@ eccentricity.addEventListener('keyup', function() {
                     }
                 }
                 if (isNumber(this, true)) {
-                    if (belongsTo(this, 0, 1)) {
+                    if (belongsTo(this, true, 0, 1)) {
                         removeWarning(this);
                     }
                     else {
-                        setWarning(this, "L'excentricité ne peut pas dépasser 1 !")
+                        
+                        setWarning(this, "Ce n'est pas une orbite elliptique !");
+                        bypass = true;
                     }
                 }
                 else {
                     setWarning(this, "Vous devez entrer un nombre positif !");
+                    bypass = true;
                 }
             }
         }
     }
-    setArgumentPeriapsis();
+    setArgumentPeriapsis(bypass);
 });
 
 argument_periapsis.addEventListener('keyup', function() {
     var unit = unitIs(this);
-    switch (unit) {
-        case '°':
-            var min = 0;
-            var max = 360;
-            break;
-        case 'rad':
-            var min = 0;
-            var max = 2 * Math.PI;
-            break;
-    }
+    var min = 0;
+    var max = 360;
     if (!isNumber(this, true)) {
         setWarning(this,"Vous devez entrer un angle positif !");
     }
     else {
-        if (!belongsTo(this, min, max)) {
+        if (!belongsTo(this, true, min, max)) {
             switch (unit) {
                 case '°':
                     setWarning(this, "L'angle doit être compris entre 0° et 360° !");
@@ -720,21 +716,13 @@ argument_periapsis.addEventListener('keyup', function() {
 
 true_anomaly.addEventListener('keyup', function() {
     var unit = unitIs(this);
-    switch (unit) {
-        case '°':
-            var min = 0;
-            var max = 360;
-            break;
-        case 'rad':
-            var min = 0;
-            var max = 2 * Math.PI;
-            break;
-    }
+    var min = 0;
+    var max = 360;
     if (!isNumber(this, true)) {
         setWarning(this,"Vous devez entrer un angle positif !");
     }
     else {
-        if (!belongsTo(this, min, max)) {
+        if (!belongsTo(this, true, min, max)) {
             switch (unit) {
                 case '°':
                     setWarning(this, "L'angle doit être compris entre 0° et 360° !");
@@ -755,7 +743,7 @@ angular_unit.forEach(function(element) {
     element.addEventListener('click', function() {
         var unit = this.innerHTML;
         var input_element = this.previousElementSibling;
-        convert(input_element, unit);
+        input_element.value = convert(parseFloat(input_element.value), unit);
         if (unit == '°') {
             unit = 'rad';
             this.innerHTML = unit;
@@ -772,7 +760,7 @@ length_unit_ini.forEach(function(element) {
         var unit = this.innerHTML;
         length_unit_ini.forEach(function(element) {
             var input_element = element.previousElementSibling;
-            convert(input_element, unit);
+            input_element.value = convert(parseFloat(input_element.value), unit);
             if (unit == 'km') {
                 element.innerHTML = 'UA';
             }
@@ -785,19 +773,21 @@ length_unit_ini.forEach(function(element) {
 
 alt.forEach(function(element) {
     element.addEventListener('click', function() {
-        var type = element.firstElementChild.getAttribute('data-content');
+        var type = element.getAttribute('class');
         alt.forEach(function(element) {
-            if (type == 'Altitude') {
+            if (type == 'altitude') {
                 element.firstElementChild.setAttribute('data-content', 'Distance au foyer');
+                element.setAttribute('class', 'foyer');
                 var input = element.nextElementSibling.firstElementChild;
                 var unit = input.nextElementSibling.innerHTML;
-                swap(input, unit, true);
+                swapAltitude(input, unit, true);
             }
             else {
                 element.firstElementChild.setAttribute('data-content', 'Altitude');
+                element.setAttribute('class', 'altitude');
                 var input = element.nextElementSibling.firstElementChild;
                 var unit = input.nextElementSibling.innerHTML;
-                swap(input, unit, false);
+                swapAltitude(input, unit, false);
             }
         });
     });
@@ -813,5 +803,23 @@ reset_button.addEventListener('click', function() {
     disable(longitude);
     disable(argument_periapsis);
     inputCheck = [false, false, false, false];
-    origine.selectedIndex = 3;
+    origine.selectedIndex = optionEarth.index;
+    alt.forEach(function(element) {
+        element.firstElementChild.setAttribute('data-content', 'Altitude');
+        element.setAttribute('class', 'altitude');
+    });
+    angular_unit.forEach(function(element) {
+        element.innerHTML = '°';
+    });
+    length_unit_ini.forEach(function(element) {
+        element.innerHTML = "km";
+    });
 });
+
+/*  
+- BUTTON
+    * add_body
+
+RESET : corriger le selectedIndex pour qu'il corresponde toujours à la Terre
+INPUTs : corriger les bugs liés au changement d'unité 
+*/
