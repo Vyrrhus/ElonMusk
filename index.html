@@ -215,27 +215,27 @@
 </form>
 </div>
 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12>
-      <form id="form_end" class="form-horizontal">
+   <form id="form_end" class="form-horizontal">
     <h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1">Arrivée</h3>
     <fieldset>
         <div class="form-group">
-            <div id="reset" class="form-inline form-group">
-                <label for="reset_button" class="col-lg-offset-4 col-md-offset-4 col-sm-offset-4 hidden-xs control-label">Orbite d'arrivée : </label>
-                <div id="reset_button" class="pull-right">   
+            <div id="reset2" class="form-inline form-group">
+                <label for="reset_button2" class="col-lg-offset-4 col-md-offset-4 col-sm-offset-4 hidden-xs control-label">Orbite d'arrivée : </label>
+                <div id="reset_button2" class="pull-right">   
                     <button class="btn btn-default hidden-sm" type="button"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
                     <button class="btn btn-default visible-sm" type="button"><span class="glyphicon glyphicon-refresh"></span></button>
                 </div> 
             </div>
-            <div id="origine_group" class="form-inline form-group">
-                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="origine">Origine</label>
-                <div id="origine_div" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
+            <div id="origine_group2" class="form-inline form-group">
+                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="origine2">Origine</label>
+                <div id="origine_div2" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 form-group">
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 form-group">
-                        <select id="origine" class="form-control">
+                        <select id="origine2" class="form-control">
                             <option>Soleil</option>
                             <option>Mercure</option>
                             <option>Vénus</option>
                             <optgroup label="Système Terre">
-                                <option id='planet_default' selected>Terre</option>
+                                <option id='planet_default2' selected>Terre</option>
                                 <option>Lune</option>
                             </optgroup>
                             <option>Mars</option>
@@ -262,15 +262,15 @@
                         </select>
                     </div>
                 </div>
-                <div id="add_body" class="pull-right">
-                    <button class="btn btn-default hidden-sm hidden-xs" type="button" data-toggle="modal" data-target="#addBodyModal"><span class="glyphicon glyphicon-plus" name="add_body"></span> Add body</button>
-                    <button class="btn btn-default hidden-lg hidden-md" type="button" data-toggle="modal" data-target="#addBodyModal"><span class="glyphicon glyphicon-plus" name="add_body"></span></button>
-                    <div id="addBodyModal" class="modal fade" role="dialog">
+                <div id="add_body2" class="pull-right">
+                    <button class="btn btn-default hidden-sm hidden-xs" type="button" data-toggle="modal" data-target="#addBodyModal2"><span class="glyphicon glyphicon-plus" name="add_body"></span> Add body</button>
+                    <button class="btn btn-default hidden-lg hidden-md" type="button" data-toggle="modal" data-target="#addBodyModal2"><span class="glyphicon glyphicon-plus" name="add_body"></span></button>
+                    <div id="addBodyModal2" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h3 class="modal-title">New body</h3>
+                                    <h3 class="modal-title">New body 2</h3>
                                 </div>
                                 <div class="modal-body" style="padding:40px 50px;">
                                     <p> Le modal sera ici pour rajouter un corps. </p>
@@ -283,84 +283,84 @@
                     </div>
                 </div>
             </div>
-            <div id="inclination" class="form-inline form-group">
-                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_inclination">Inclinaison</label>
+            <div id="inclination2" class="form-inline form-group">
+                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_inclination2">Inclinaison</label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                        <input id="input_inclination" class="form-control" type="text">
+                        <input id="input_inclination2" class="form-control" type="text">
                         <span class="input-group-addon" name="angular_unit">°</span>
                     </div>
                 <div hidden>
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un angle entre -180° et 180° !</p>
                 </div>
             </div>
-            <div id="longitude" class="form-inline form-group">
-                <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_longitude">Longitude du NA</label>
-                <label class="visible-sm col-sm-4 control-label" for="input_longitude">Long. du NA</label>
-                <label class="visible-xs col-xs-4 control-label" for="input_longitude">&Omega;</label>
+            <div id="longitude2" class="form-inline form-group">
+                <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_longitude2">Longitude du NA</label>
+                <label class="visible-sm col-sm-4 control-label" for="input_longitude2">Long. du NA</label>
+                <label class="visible-xs col-xs-4 control-label" for="input_longitude2">&Omega;</label>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_longitude" class="form-control" type="text" disabled="true">
+                    <input id="input_longitude2" class="form-control" type="text" disabled="true">
                     <span class="input-group-addon" name="angular_unit">°</span>
                 </div>
                 <div hidden>
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un angle entre 0° et 360° !</p>
                 </div>
             </div>
-            <div id="periapsis" class="form-inline form-group">
-                <span name = "alt" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Altitude">Périgée</label></span>
+            <div id="periapsis2" class="form-inline form-group">
+                <span name = "alt2" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis2" rel="popover" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Altitude">Périgée</label></span>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_periapsis" class="form-control" type="text">
+                    <input id="input_periapsis2" class="form-control" type="text">
                     <span class="input-group-addon" name="length_unit_fin">km</span>
                 </div>
                 <div hidden="true">
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre positif !</p>
                 </div>
             </div>
-            <div id="apoapsis" class="form-inline form-group">
-                <span name="alt" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Altitude">Apogée</label></span>
+            <div id="apoapsis2" class="form-inline form-group">
+                <span name="alt2" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis2" rel="popover" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Altitude">Apogée</label></span>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_apoapsis" class="form-control" type="text">
+                    <input id="input_apoapsis2" class="form-control" type="text">
                     <span class="input-group-addon" name="length_unit_fin">km</span>
                 </div>
                 <div hidden>
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre positif !</p>
                 </div>
             </div>         
-            <div id="semi_majoraxis" class="form-inline form-group">
-                <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_semi_majoraxis">Demi grand-axe</label>
-                <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_semi_majoraxis">a</label>
+            <div id="semi_majoraxis2" class="form-inline form-group">
+                <label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_semi_majoraxis2">Demi grand-axe</label>
+                <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_semi_majoraxis2">a</label>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_semi_majoraxis" class="form-control" type="text">
+                    <input id="input_semi_majoraxis2" class="form-control" type="text">
                     <span class="input-group-addon" name="length_unit_fin" >km</span>
                 </div>
                 <div hidden>
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre positif !</p>
                 </div>
             </div>
-            <div id="eccentricity" class="form-inline form-group">
-                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_eccentricity">Excentricité</label>
+            <div id="eccentricity2" class="form-inline form-group">
+                <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_eccentricity2">Excentricité</label>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_eccentricity" class="form-control" type="text">
+                    <input id="input_eccentricity2" class="form-control" type="text">
                 </div>
                 <div hidden>
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un nombre entre 0 et 1 !</p>
                 </div>
             </div>
-            <div id="argument_periapsis" class="form-inline form-group">
-                <label class="col-lg-4 visible-lg control-label" for="input_argument_periapsis">Argument du périgée</label>
-                <label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="input_argument_periapsis">&omega;</label>
+            <div id="argument_periapsis2" class="form-inline form-group">
+                <label class="col-lg-4 visible-lg control-label" for="input_argument_periapsis2">Argument du périgée</label>
+                <label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="input_argument_periapsis2">&omega;</label>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_argument_periapsis" class="form-control" type="text" disabled="true">
+                    <input id="input_argument_periapsis2" class="form-control" type="text" disabled="true">
                     <span class="input-group-addon" name="angular_unit">°</span>
                 </div>
                 <div hidden>
                     <p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">Vous devez entrer un angle entre 0° et 360° !</p>
                 </div>
             </div>
-            <div id="true_anomaly" class="form-inline form-group">
-                <label class="col-lg-4 col-md-4 visible-lg visible-md control-label" for="input_true_anomaly">Anomalie vraie</label>
-                <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_argument_periapsis">&nu;</label>
+            <div id="true_anomaly2" class="form-inline form-group">
+                <label class="col-lg-4 col-md-4 visible-lg visible-md control-label" for="input_true_anomaly2">Anomalie vraie</label>
+                <label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_true_anomaly2">&nu;</label>
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 input-group">
-                    <input id="input_true_anomaly" class="form-control" type="text">
+                    <input id="input_true_anomaly2" class="form-control" type="text">
                     <span class="input-group-addon" name="angular_unit">°</span> 
                 </div>
                 <div hidden>
