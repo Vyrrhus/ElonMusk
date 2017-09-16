@@ -16,7 +16,7 @@
 <body>
 <div class="container">
   <header class="page-header">
-        <h1> Solveur de Lambert <small>powered for Candice</small></h1>
+        <h1> Solveur de Lambert <small>powered by Vyrrhus</small></h1>
         <p> Résolution à n tours sur des orbites képleriennes
         </p>
    </header>
@@ -26,26 +26,27 @@
           <section>
               <h3> Qu'est-ce qu'un solveur de Lambert ? </h3>
                 <p class="text-justify"> 
-                    Le solveur est un outil capable de résoudre le problème dit de Lambert, que l'on pose ainsi :
+                    Le solveur est un outil capable de résoudre le <strong>problème de Lambert</strong> :
                 </p>
               <blockquote>
-                  <p class="text-justify">Sachant la position initiale et la position finale d'un corps en orbite et la durée de trajet entre ces deux positions, quelle est la trajectoire parcourue par le corps ?</p>
-                  <footer>Lambert</footer>
+                  <p class="text-justify">Connaissant la position de départ et d'arrivée d'un objet ainsi que la durée du trajet, quelle est la trajectoire parcourue ?</p>
+                  <footer>Lambert's problem</footer>
               </blockquote>
               <p class="text-justify"> 
-                    En d'autres termes, il permet de calculer les paramètres d'une orbite en connaissant seulement deux positions successives de cette orbite et la durée entre les deux positions.
+                    La résolution du problème recquiert certaines simplifications : on parle par exemple <strong>d'orbites képlériennes</strong>, c'est-à-dire des orbites elliptiques ou hyperboliques. Pour cette résolution, on considérera que ces orbites képleriennes sont non perturbées, c'est-à-dire qu'on négligera l'effet des perturbations (J2, attraction de n corps, frottements, etc.) 
                   <br>
-                    La résolution du problème, cependant, demande quelques simplifications avec la réalité : on parle donc d'orbites képlériennes, c'est-à-dire des orbites elliptiques ou hyperboliques. Ainsi, pour calculer une trajectoire interplanétaire, on devra utiliser des orbites successives en supposant que la trajectoire traverse plusieurs "sphères d'influence" au sein desquelles se trouvent uniquement deux corps : l'objet étudié, parcourant la trajectoire que l'on souhaite calculer, et l'astre attracteur. 
+                    Ainsi, pour calculer une trajectoire interplanétaire, on devra utiliser des orbites successives en supposant que la trajectoire traverse plusieurs "sphères d'influence" au sein desquelles se trouvent uniquement deux corps : l'objet étudié et l'objet attracteur.
                   <br>
-                    On procédera cependant à une simulation sur un problème à N corps afin d'obtenir l'écart relatif entre la position finale souhaitée et celle obtenue par la trajectoire qu'on aura calculé.
-                    Ainsi, il sera possible d'itérer le calcul pour converger vers une solution satisfaisante avec des approximations plus faibles.
+                    On procédera ultérieurement à une simulation sur un problème à N corps afin d'obtenir l'écart relatif entre la position finale calculée à l'aide du solveur et celle obtenue en utilisant les données du solveur dans un modèle non képlérien.
+                    Ainsi, il sera possible d'itérer le calcul pour réduire cet écart et converger vers une solution satisfaisante avec des approximations plus faibles.
+                  <br>
+                    A l'avenir, cet outil permettra également de réaliser des <strong>assistances gravitationnelles</strong>, patience.
               </p>
             <h3> Procédure à suivre </h3>
               <ol class="text-justify">
-                  <li>Renseignez les paramètres de départ, option coordonnées pour une simple trajectoire, orbite de départ pour un transfert interplanétaire.</li>
-                  <li>Renseignez les paramètres d'arrivée ou les coordonnées à atteindre pour une simple trajectoire.</li>
-                  <li>Rajoutez les informations complémentaires : fenêtre de départ, fenêtre d'arrivée, durée maximale du trajet, nombre de tours...</li>
-                  <li>Validez !</li>
+                  <li>Renseignez les paramètres de l'orbite de départ. </li>
+                  <li>Renseignez les paramètres de l'orbite d'arrivée. </li>
+                  <li>Précisez ce que vous souhaitez obtenir : fenêtre de départ, fenêtre d'arrivée, durée maximale du trajet, nombre de tours...</li>
               </ol>
               
           </section>
