@@ -126,7 +126,7 @@
 									<div class="col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">
 										<div class="btn-group col-lg-12 col-md-12 col-sm-12 col-xs-12" role="group">
   											<button class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6" type="button" id="add_body" data-toggle="modal" data-target="#addBodyModal"><span class="glyphicon glyphicon-plus"></span> <b>New body</b></button>
-											<button class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6" type="button" id="info_body" ><span class="glyphicon glyphicon-list-alt"></span> <b>Body info</b></button>
+											<button class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6" type="button" id="info_body" data-toggle="modal" data-target="#infoModal"><span class="glyphicon glyphicon-list-alt"></span> <b>Body info</b></button>
 										</div>
 									</div>
 								</div>
@@ -173,7 +173,7 @@
 									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Périgée</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_periapsis" class="form-control" type="text">
+											<input id="input_periapsis" class="form-control" type="text" placeholder="Altitude">
 											<span class="input-group-addon" name="length_unit_ini">km</span>
 										</div>
 										<div hidden="true">
@@ -188,7 +188,7 @@
 									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apogée</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_apoapsis" class="form-control" type="text">
+											<input id="input_apoapsis" class="form-control" type="text" placeholder="Altitude">
 											<span class="input-group-addon" name="length_unit_ini">km</span>
 										</div>
 										<div hidden>
@@ -290,7 +290,7 @@
                             				<option>Mercure</option>
                             				<option>Vénus</option>
                             				<optgroup label="Système Terre">
-                                				<option id='select_default_start' selected>Terre</option>
+                                				<option id='select_default_end' selected>Terre</option>
                                 				<option>Lune</option>
                             				</optgroup>
                             				<option>Mars</option>
@@ -336,7 +336,7 @@
 									<div class="col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">
 										<div class="btn-group col-lg-12 col-md-12 col-sm-12 col-xs-12" role="group">
   											<button class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6" type="button" id="add_body" data-toggle="modal" data-target="#addBodyModal"><span class="glyphicon glyphicon-plus"></span> <b>New body</b></button>
-											<button class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6" type="button" id="info_body" ><span class="glyphicon glyphicon-list-alt"></span> <b>Body info</b></button>
+											<button class="btn btn-default col-lg-6 col-md-6 col-sm-6 col-xs-6" type="button" id="info_body" data-toggle="modal" data-target="#infoModal"><span class="glyphicon glyphicon-list-alt"></span> <b>Body info</b></button>
 										</div>
 									</div>
 								</div>
@@ -379,11 +379,11 @@
 								<!-- Input longitude du noeud ascendant -->
 								
 								<div id="periapsis" class="form-group">
-									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Périgée</label></span>
+									<span name="alt_end" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Périgée</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_periapsis" class="form-control" type="text">
-											<span class="input-group-addon" name="length_unit_ini">km</span>
+											<input id="input_periapsis" class="form-control" type="text" placeholder="Altitude">
+											<span class="input-group-addon" name="length_unit_fin">km</span>
 										</div>
 										<div hidden="true">
 										<p class="help-block">Vous devez entrer un nombre positif !</p>
@@ -394,11 +394,11 @@
 								<!-- Input periapsis -->
 								
 								<div id="apoapsis" class="form-group">
-									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apogée</label></span>
+									<span name="alt_end" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apogée</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_apoapsis" class="form-control" type="text">
-											<span class="input-group-addon" name="length_unit_ini">km</span>
+											<input id="input_apoapsis" class="form-control" type="text" placeholder="Altitude">
+											<span class="input-group-addon" name="length_unit_fin">km</span>
 										</div>
 										<div hidden>
 											<p class="help-block">Vous devez entrer un nombre positif !</p>
@@ -414,7 +414,7 @@
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_semi_majoraxis" class="form-control" type="text">
-											<span class="input-group-addon" name="length_unit_ini">km</span>
+											<span class="input-group-addon" name="length_unit_fin">km</span>
 										</div>
 										<div hidden>
 											<p class="help-block">Vous devez entrer un nombre positif !</p>
@@ -480,12 +480,42 @@
 		</div>
 		<!-- Formulaires de départ et d'arrivée -->
 		
-		<div class="row" id="parameters">
+		<div id="last_instruction" class="row">
+			<div class="col-lg-12">
+				<section>
+					<h3>Pour finir...</h3>
+					<p class="text-justify">
+						Il ne reste plus qu'à indiquer la date du départ et l'étendue de la fenêtre de tir afin de déterminer les bornes des différents graphes. <br>
+						On peut également sélectionner les différents graphes souhaités afin d'obtenir une vision complète des différentes options qui se présentent et choisir la meilleure selon le critère souhaité (énergie, rapidité, proximité avec d'autres corps, etc.) <br>
+						Il ne reste alors plus qu'à lancer la simulation !
+					</p>
+				</section>
+			</div>
+		</div>
+		
+		<div class="row" id="formulaire_final">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<form id="form_parameters" class = "form-horizontal">
+					<form id="form_final" class = "form-horizontal">
 						<fieldset>
-							
+							<div class="form-group">
+								<div class="form-group">
+									<label class="col-lg-2 col-md-2 cold-sm-2 col-xs-2 control-label" for="departure">Departure</label>
+									<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 input-group">
+										<input id="departure" class="form-control" type="date">
+									</div>
+								</div>
+								<!-- departure date yyyy mm jj -->
+								
+								<div class="form-group">
+									<label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 control-label" for="window_range">Window</label>
+									<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 input-group">
+										<input id="window_range" class="form-control" type="number">
+										<span class="input-group-addon">days</span>
+									</div>
+								</div>
+								<!-- window range (days) -->
+							</div>
 						</fieldset>
 					</form>
 				</div>
@@ -515,131 +545,201 @@
 				</div>
 				<div class="modal-body">
 					<form id="form_modal" class="form-horizontal">
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_origine">Origine</label>
-							<select id="add_origine" class="form-control">
-                        <option id="select_modal"  selected>Soleil</option>
-                            <option>Mercure</option>
-                            <option>Vénus</option>
-                            <optgroup label="Système Terre">
-                                <option>Terre</option>
-                                <option>Lune</option>
-                            </optgroup>
-                            <option>Mars</option>
-                            <optgroup label="Système Jupiter">
-                                <option>Jupiter</option>
-                                <option>Io</option>
-                                <option>Europe</option>
-                                <option>Ganymède</option>
-                                <option>Callisto</option>
-                            </optgroup>
-                            <optgroup label="Système Saturne">
-                                <option>Saturne</option>
-                                <option>Titan</option>
-                                <option>Encelade</option>
-                            </optgroup>
-                            <option>Uranus</option>
-                            <option>Neptune</option>
-                            <option>Pluton</option>
-                            <optgroup label="Comètes">
-                            <option>Halley</option>
-                            <option>Encke</option>
-                            <option>Churyumov-Gerasimenko</option>
-                            </optgroup>
-							<optgroup name="hidden_body" label="Autre" hidden="true">
-							</optgroup>
-                    </select>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_name">Nom</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_name">
+						<fieldset class="row">
+							<div class="form-group">
+								<div id="origine_group" class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="origine">Origine</label>
+									<div id="origine_div" class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<select id="origine" class="form-control">
+                            				<option id="select_modal" selected>Soleil</option>
+                            				<option>Mercure</option>
+                            				<option>Vénus</option>
+                            				<optgroup label="Système Terre">
+                                				<option>Terre</option>
+                                				<option>Lune</option>
+                            				</optgroup>
+                            				<option>Mars</option>
+                            				<optgroup label="Système Jupiter">
+												<option>Jupiter</option>
+												<option>Io</option>
+												<option>Europe</option>
+												<option>Ganymède</option>
+												<option>Callisto</option>
+											</optgroup>
+											<optgroup label="Système Saturne">
+												<option>Saturne</option>
+												<option>Titan</option>
+												<option>Encelade</option>
+											</optgroup>
+											<option>Uranus</option>
+											<option>Neptune</option>
+											<option>Pluton</option>
+											<optgroup label="Comètes">
+												<option>Halley</option>
+												<option>Encke</option>
+												<option>Churyumov-Gerasimenko</option>
+											</optgroup>
+											<optgroup name="hidden_body" label="Autre" hidden="true">
+											</optgroup>
+										</select>
+									</div>
+								</div>
+								<!-- Select pour choisir le referenceBody -->
+								
+								<div id="type_orbit_group" class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="orbit_type">Type orbite</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<select id="orbit_type" class="form-control" disabled>
+											<option selected>Elliptique</option>
+											<option>Hyperbolique</option>
+										</select>
+									</div>
+								</div>
+								<!-- Select pour choisir le type d'orbite -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="name">Name</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="name" class="form-control" type="text">
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>
+								<!-- name -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="mass">Mass</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="mass" class="form-control" type="text">
+											<span class="input-group-addon">kg</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- mass -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="radius">Radius</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="radius" class="form-control" type="text">
+											<span class="input-group-addon">km</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- radius -->
 							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
+						</fieldset>
+						<!-- Généralités -->
+						
+						<fieldset class="row">
+							<div class="form-group">
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="inclination">i</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="inclination" class="form-control" type="text">
+											<span class="input-group-addon">°</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- inclination -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="longitude">&Omega;</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="longitude" class="form-control" type="text">
+											<span class="input-group-addon">°</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- longitude -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="semimajoraxis">a</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="semimajoraxis" class="form-control" type="text">
+											<span class="input-group-addon">km</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- semi major-axis -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="eccentricity">e</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+											<input id="eccentricity" class="form-control" type="text">
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>
+								<!-- eccentricity -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="argument">&omega;</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="argument" class="form-control" type="text">
+											<span class="input-group-addon">°</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- argument of periapsis -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="anomaly">&nu;</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<div class="input-group">
+											<input id="anomaly" class="form-control" type="text">
+											<span class="input-group-addon">°</span>
+										</div>
+										<div hidden>
+											<p class="help-block"></p>
+										</div>
+									</div>
+								</div>	
+								<!-- anomaly -->
+								
+								<div class="form-group">
+									<label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" for="epoch">Epoch</label>
+									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+										<input id="epoch" class="form-control" type="datetime-local" value="2000-01-01T12:00">
+									</div>
+								</div>	
+								<!-- Epoch -->
+								
 							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_mass">Masse</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_mass">
-								<span class="input-group-addon">kg</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_radius">Rayon</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_radius">
-								<span class="input-group-addon">km</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_inclination">i</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_inclination">
-								<span class="input-group-addon" name="angular_unit">°</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_longitude">&Omega;</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_longitude" disabled="true">
-								<span class="input-group-addon" name="angular_unit">°</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_semimajoraxis">a</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_semimajoraxis">
-								<span class="input-group-addon" name="length_unit_modal">km</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_eccentricity">e</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_eccentricity">
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_argument">&omega;</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_argument" disabled="true">
-								<span class="input-group-addon" name="angular_unit">°</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
-						<div class="form-inline form-group">
-							<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" for="add_anomaly">&nu;</label>
-							<div class="input-group">
-								<input class="form-control" type="text" id="add_anomaly">
-								<span class="input-group-addon" name="angular_unit">°</span>
-							</div>
-							<div hidden>
-								<p class="help-block col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"></p>
-							</div>
-						</div>
+						</fieldset>
+						<!-- Paramètres -->
 					</form>
-				</div>
+					<!-- Formulaire du modal -->
+</div>
 				<div class="modal-footer help-block">
 					<button type="button" class="btn btn-default pull-right" id="submit_add"> Add</button>
 					<h3 hidden="true"></h3>
@@ -648,11 +748,24 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="infoModal" class="modal fade" role="definition">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<header class="page-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h3>More information on : <b id="infoBodyModal"></b></h3>
+					</header>
+				
+					<section id="infoSectionModal"></section>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<script src="vector.js"></script>
-	<script src="planetbody.js"></script>
-	<script src="form_commit_2_3.js"></script>
-	<script src="lambert_solver.js"></script>
-
+	<script src="javascript/vector.js"></script>
+	<script src="javascript/planetbody.js"></script>
+	<script src="javascript/form.js"></script>
 </body>
 </html>
