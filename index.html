@@ -8,40 +8,54 @@
     <link href="stylesheet/bootstrap.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Lambert's solver</title>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Interplanetary travelling</title>
     <link href = "img/icon_rocket.png" rel="icon">
 </head>
   
 <body>
 	<div class="container">
 		<header class="page-header">
-			<h1> Solveur de Lambert <small>powered by Vyrrhus</small></h1>
-			<p> Résolution à n tours sur des orbites képleriennes
+			<h1> Interplanetary travelling tool<small>powered by Vyrrhus</small></h1>
+			<p> Non perturbed Keplerian orbits
 			</p>
 		</header>
 
 		<div id="position" class="row">
 			<div class="col-lg-12">
 				<section>
-					<h3> Qu'est-ce qu'un solveur de Lambert ? </h3>
+					<h3> What is that for ? </h3>
 					<p class="text-justify">
-						Le solveur est un outil capable de résoudre le <strong>problème de Lambert</strong> :
+						Thanks to this tool, one can get all the data needed to choose the best path between two positions in our solar system, using what is known as <strong>Lambert's problem</strong> :
 					</p>
 					<blockquote>
-						<p class="text-justify">Connaissant la position de départ et d'arrivée d'un objet ainsi que la durée du trajet, quelle est la trajectoire parcourue ?</p>
+						<p class="text-justify">Given both the starting and the ending position, and the time of flight, hence the velocity of the body or spacecraft related to these positions, and thus the transfer orbit.</p>
 						<footer>Lambert's problem</footer>
 					</blockquote>
 					<p class="text-justify">
-						La résolution du problème recquiert certaines simplifications : on parle par exemple <strong>d'orbites képlériennes</strong>, c'est-à-dire des orbites elliptiques ou hyperboliques. Pour cette résolution, on considérera que ces orbites képleriennes sont non perturbées, c'est-à-dire qu'on négligera l'effet des perturbations (J2, attraction de n corps, frottements, etc.)
-						<br> Ainsi, pour calculer une trajectoire interplanétaire, on devra utiliser des orbites successives en supposant que la trajectoire traverse plusieurs "sphères d'influence" au sein desquelles se trouvent uniquement deux corps : l'objet étudié et l'objet attracteur.
-						<br> On procédera ultérieurement à une simulation sur un problème à N corps afin d'obtenir l'écart relatif entre la position finale calculée à l'aide du solveur et celle obtenue en utilisant les données du solveur dans un modèle non képlérien. Ainsi, il sera possible d'itérer le calcul pour réduire cet écart et converger vers une solution satisfaisante avec des approximations plus faibles.
-						<br> A l'avenir, cet outil permettra également de réaliser des <strong>assistances gravitationnelles</strong>, patience.
+						Solving this problem requires to neglect a lot of elements, called <strong>perturbations</strong> : these are the effect of planet's oblateness, the drag of the atmosphere, the influence of a third body, the solar radiation...
+						<br>
+						This way, we will be able to compute the trajectory of a body, according to Newtonian mechanics and <strong>Kepler's laws of motion</strong>, that is, conic section orbits such as hyperbola, circle or ellipse.
+						<br>
+						In order to compute an interplanetary travel, we will consider that the body considered is going through several orbits inside each planet's area, the <strong>sphere of influence</strong>.
 					</p>
-					<h3> Procédure à suivre </h3>
+					<h3> More</h3>
+					<p class="text-justify">
+						For now, one can find out all the data needed about orbital parameters, filling the different forms ; it is also possible to use the Lambert's method in order to find a convenient orbit for a rendez-vous between the departure and the arrival forms.
+						<br>
+						Later, the Interplanetary travelling tool will be able to compute the whole interplanetary trajectory and even schedule gravitational assist (fly-by).
+						<br>
+						It will also consider the effects of perturbations.
+						<br>
+						Several options will be added, so that different graphics can be shown.
+						<br>
+						Precision of the simulation is a big issue, thus it will increase regarding the many algorithms used, such as the Newton-Raphson method (replaced by the bi-section one ?) in order to improve robustness. 
+					</p>
+					<h3> Instructions </h3>
 					<ol class="text-justify">
-						<li>Renseignez les paramètres de l'orbite de départ. </li>
-						<li>Renseignez les paramètres de l'orbite d'arrivée. </li>
-						<li>Précisez ce que vous souhaitez obtenir : fenêtre de départ, fenêtre d'arrivée, durée maximale du trajet, nombre de tours...</li>
+						<li>Fill the departure form and the arrival forms  </li>
+						<li>You can add a body if it doesn't appear in the list, although it will last until the end of your session. You can switch the units (i.e. km, UA, rad, °) </li>
+						<li>Choose your departure date and a window for the launch : that will be useful for a porkshop plot ! </li>
 					</ol>
 
 				</section>
@@ -528,6 +542,11 @@
 				<button class="btn btn-default" type="button" id="plot"> PLOT !</button>
 			</div>
 		</div>
+		<div class="row">
+			<h3>Plot experiments</h3>
+			<canvas id="canvas"></canvas>
+		</div>
+		
 
 		<footer style="padding:50px 40px;">
 			<p>
@@ -763,9 +782,13 @@
 			</div>
 		</div>
 	</div>
-
-	<script src="javascript/vector.js"></script>
-	<script src="javascript/planetbody.js"></script>
+	
+	<script src="javascript/operations.js"></script>
+	<script src="javascript/time.js"></script>
+	<script src="javascript/class.js"></script>
+	<script src="javascript/database.js"></script>
+	<script src="javascript/orbit_determination.js"></script>
 	<script src="javascript/form.js"></script>
+	
 </body>
 </html>
