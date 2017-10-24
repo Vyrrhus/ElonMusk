@@ -59,8 +59,13 @@ function Orbit(referenceBody, inclination, longitude_NA, semiMajorAxis, eccentri
 		this.referenceBody = referenceBody;
 		this.inclination = inclination;				// °
 		this.longitude_NA = longitude_NA;			// °
-		this.semiMajorAxis = semiMajorAxis;			// UA
 		this.eccentricity = eccentricity;			
+		if (this.eccentricity == 1) {
+			this.semiMajorAxis = Infinity;
+		}
+		else {
+			this.semiMajorAxis = semiMajorAxis;			// UA
+		}
 		this.longitude_peri = longitude_peri;		// °
 		this.true_anomaly = true_anomaly;			// °
 		this.epoch = epoch;							// ["yyyy-mm-dd", "hh:mm:ss"]
@@ -83,25 +88,44 @@ function Orbit(referenceBody, inclination, longitude_NA, semiMajorAxis, eccentri
 		}
 		
 		// Other elements to caracterize the orbit : period, specific relative angular momentum, altitude of apoapsis & periapsis (km), periapsis & apoapsis (UA)
-		this.h = Math.sqrt(this.referenceBody.gravitationalParameter * convert(this.semiMajorAxis, 'UA') * (1 - Math.pow(this.eccentricity, 2)));							// km²/s
 		if (this.type == 'ellipse') {
 			this.period = 2 * Math.PI * Math.sqrt(Math.pow(convert(this.semiMajorAxis, 'UA'), 3) / this.referenceBody.gravitationalParameter);								// s
 			this.meanMotion = 360 / this.period;																															// °/s
 			this.apoapsis = (1 + this.eccentricity) * this.semiMajorAxis;																									// UA
 			this.altitude_apoapsis = convert(this.apoapsis, 'UA') - this.referenceBody.radius;																				// km
 		}
-		this.periapsis = (1- this.eccentricity) * this.semiMajorAxis;																										// UA
+		if (this.type == 'parabola') {
+			this.periapsis = semiMajorAxis;
+		}
+		else {
+			this.periapsis = (1- this.eccentricity) * this.semiMajorAxis;																					// UA
+			this.h = Math.sqrt(this.referenceBody.gravitationalParameter * convert(this.semiMajorAxis, 'UA') * (1 - Math.pow(this.eccentricity, 2)));							// km²/s
+		}
 		this.altitude_periapsis = convert(this.periapsis, 'UA') - this.referenceBody.radius;																				// km
 		
+		
+		
 		// Geometric parameters
-		this.semiMinorAxis = this.semiMajorAxis * Math.sqrt(1 - Math.pow(this.eccentricity, 2));																			// UA
-		this.c = this.eccentricity * this.semiMajorAxis;																													// UA
-		this.semilatus_rectum = this.semiMajorAxis * (1 - Math.pow(this.eccentricity, 2));																					// UA
-		this.flattening = (this.semiMajorAxis - this.semiMinorAxis) / this.semiMajorAxis;
-		if (this.type != 'ellipse') {
+		if (this.type == 'parabola') {
+			this.semilatus_rectum = 2*this.periapsis;	// UA
+			this.semiMinorAxis = Infinity;
+			this.c = undefined;
+			this.d = this.periapsis;
+			this.turn_angle = 90;
+			this.infiniteVelocity = 0;
+			this.periapsisVelocity = Math.sqrt(2*this.referenceBody.gravitationalParameter / convert(this.periapsis, 'UA'));
+			this.h = this.periapsisVelocity * convert(this.periapsis, 'UA');
+		}
+		else {
+			this.semilatus_rectum = this.semiMajorAxis * (1 - Math.pow(this.eccentricity, 2));																					// UA
+			this.semiMinorAxis = this.semiMajorAxis * Math.sqrt(1 - Math.pow(this.eccentricity, 2));																			// UA
+			this.c = this.eccentricity * this.semiMajorAxis;																													// UA
+			this.flattening = (this.semiMajorAxis - this.semiMinorAxis) / this.semiMajorAxis;
+		}
+		if (this.type == 'hyperbola') {
 			this.d = this.semiMinorAxis;																																	// UA
-			this.hyperbolic_angle = Math.acos( 1 / this.eccentricity);																										// °
-			this.escapeVelocity = Math.sqrt(this.referenceBody.gravitationalParameter  / convert(-this.semiMajorAxis, 'UA'));												// km/s
+			this.turn_angle = 2*convert(Math.acos( 1 / this.eccentricity), 'rad');																										// °
+			this.infiniteVelocity = Math.sqrt(this.referenceBody.gravitationalParameter  / convert(-this.semiMajorAxis, 'UA'));												// km/s
 			this.periapsisVelocity = Math.sqrt(this.referenceBody.gravitationalParameter * (2/convert(this.periapsis, 'UA') - 1 / convert(this.semiMajorAxis, 'UA')));
 		}
 	}
@@ -210,7 +234,7 @@ function Orbit(referenceBody, inclination, longitude_NA, semiMajorAxis, eccentri
 				
 				// Mean anomaly from eccentric anomaly
 				var meanAnomaly = eccentricAnomaly - this.eccentricity * Math.sin(eccentricAnomaly);											// rad
-				meanAnomaly = meanAnomaly = convert(meanAnomaly, 'rad');																		// °
+				meanAnomaly = convert(meanAnomaly, 'rad');																		// °
 				
 				// Time since periapsis from mean anomaly
 				var time = meanAnomaly / this.meanMotion;																						// s
@@ -292,7 +316,7 @@ function Orbit(referenceBody, inclination, longitude_NA, semiMajorAxis, eccentri
 			return radius;
 		}
 		this.getVelocity = function(radius) {
-			var velocity = Math.sqrt(this.referenceBody.gravitationalParameter * (2/radius - 1/convert(semiMajorAxis, 'UA')));
+			var velocity = Math.sqrt(this.referenceBody.gravitationalParameter * (2/radius - 1/convert(this.semiMajorAxis, 'UA')));
 			return velocity;
 		}
 		this.getCircularVelocity = function(radius) {
@@ -316,3 +340,6 @@ function Orbit(referenceBody, inclination, longitude_NA, semiMajorAxis, eccentri
 }
 
  
+// Reference : "Fundamentals of Astrodynamics" 
+//				by R.R.Bate, D.D.Mueller, and J.E. White
+//				Dover Publications (1971)
