@@ -20,6 +20,9 @@ function get_orbitalElements(r, v, referenceBody) {
 	if (dot(N,J) < 0) {
 		longitude = 2*Math.PI - longitude;
 	}
+	if (N_module == 0) {
+		longitude = 0;
+	}
 	// longitude of ascending node lies between 0rad and 2Pi rad
 	
 	var mu = referenceBody.gravitationalParameter;
@@ -31,12 +34,16 @@ function get_orbitalElements(r, v, referenceBody) {
 	if (dot(e,K) < 0) {
 		argument_periapsis = 2*Math.PI - argument_periapsis;
 	}
+	if (N_module == 0) {
+		argument_periapsis = 0;
+	}
 	// argument of periapsis lies between 0rad and 2Pi rad
 	
 	var true_anomaly = Math.acos(dot(e,r) / e_module / r_module);
 	if (v_radial < 0) {
 		true_anomaly = 2*Math.PI - true_anomaly;
 	}
+	true_anomaly = true_anomaly%360;
 	
 	if (e == 1) {
 		var a = 0;
@@ -167,7 +174,7 @@ function lambert_method(referenceBody, r_departure, r_arrival, dT, isPrograde) {
 		z0 = z1;
 		z1 = z0 - F(z0) / dF(z0, epsilon);
 	} while(Math.abs((z1-z0) / z0) > epsilon)
-		
+
 	// Lagrange coefficients
 	var f = 1 - y(z1) / r_departure_module;
 	var g = A * Math.sqrt(y(z1) / mu);
