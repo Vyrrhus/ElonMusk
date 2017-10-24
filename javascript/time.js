@@ -27,3 +27,33 @@ function getTime_from_date(date, hour) {
 	}
 	return julianDayNumber + julianDaySecond - 43200 * Math.sign(100*y+m-190002.5) + 43200;
 }
+
+function convert_time(value, unit) {
+	
+}
+
+function getDate_from_time(nb_JD) {
+	
+}
+
+function time_convert(amount, term) {
+	var result;
+	switch(term) {
+		case 'days':
+			result = 86400*amount;
+			break;
+		case 'weeks':
+			result = 86400*7*amount;
+			break;
+		case 'months':
+			result = 86400*365.25/12*amount;
+			break;
+		case 'years':
+			result = 86400*365.25*amount;
+			break;
+		case 'hours':
+			result = 3600*amount;
+			break;
+	}
+	return result;
+}
