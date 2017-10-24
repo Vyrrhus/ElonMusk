@@ -1,9 +1,10 @@
-# hello-world
-Just a testing repository
+#ITT project :)
 
-Well, I guess I'm supposed to write a bit about what one's supposed to find there.
-Unfortunately, I'm afraid there's nothing to find, not even a serious Readme.md ; That wasn't worth the fly, was it ?
+You may find how my ITT tool works.
+It has been coded with love and a lot of tears, hence it may be hard to understand it because of my lack of experience.
 
-You'll find more @ https://vyrrhus.github.io/Lambert
+That wasn't worth the fly, was it ?
+
+You'll find more @ https://vyrrhus.github.io/ITT
 
 Enjoy !
