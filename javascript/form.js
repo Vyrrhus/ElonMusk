@@ -24,6 +24,7 @@ var modal_mass = formModal.elements['mass'];
 var radius = formModal.elements['radius'];
 var modal_epoch = formModal.elements['epoch'];
 var departure = document.getElementById('departure');
+var departure_hour = document.getElementById('departure_hour');
 var window_range = document.getElementById('window_range');
 
 var parameter = [periapsis, apoapsis, semi_majoraxis, eccentricity];
@@ -36,6 +37,8 @@ var hiddenOption = document.getElementsByName('hidden_body');
 var angular_unit = document.getElementsByName('angular_unit');
 var length_unit = [document.getElementsByName('length_unit_ini'), document.getElementsByName('length_unit_fin'), document.getElementsByName('length_unit_modal')];
 var alt = [document.getElementsByName('alt_start'), document.getElementsByName('alt_end')];
+var menu = document.getElementsByName('menu');
+var window_unit = document.getElementById('window_unit');
 }
 //Buttons
 {
@@ -48,193 +51,11 @@ var submit_button = formModal.elements['submit_add'];
 {
 var body = [planets[0], planets[0], planets[1]]; // correspond au corps d'arrivée, de départ et du modal
 var inputCheck = [[false, false, false, false], [false, false, false, false]]; // permet en cas d'orbit elliptique d'obtenir les infos nécessaires
-var orbitDefined = [new Orbit(Terre), new Orbit(Terre)];
+var range = ['days', 'weeks','months', 'years', 'hours'];
 }
 //Fonctions
 {
-function isNumber(element, notNegative) {
-	var value = element.value;
-	var caracter = ['0','1','2','3','4','5','6','7','8','9','e','.', 'e', 'E', '+', '-'];
-	var error = 0;
-	for (let k=0, c=value.length ; k < c ; k++) {
-		if (!caracter.includes(value[k])) {
-			error++;
-		} // Faux si autres caractères que ceux acceptés
-		if (value[k] == '.') {
-			if (k == 0) {
-				error++;
-			}
-			else {
-				if (value[k-1] == '-') {
-					error++;
-				}
-				else {
-					for (let j=0 ; j < k ; j++) {
-						if (value[j] == 'e' || value[j] == 'E' || value[j] == '.') {
-							error++;
-						}
-					}
-				}
-			}
-		} // Gestion des coma
-		if (value[k] == '-') {
-			if (k == 0) {
-				if (notNegative) {
-					error++;
-				}
-			}
-			else {
-				if (value[k-1] != 'E' && value[k-1] != 'e') {
-				error++;
-				}
-			}
-		} // Gestion du négatif
-		if (value[k] == '+') {
-			if (k != 0) {
-				if (value[k-1] != 'E' && value[k-2] != 'e') {
-					error++;
-				}
-			}
-		} // Gestion du "+"
-		if (value[k] == 'e' || value[k] == 'E') {
-			if (k == 0) {
-				error++;
-			}
-			else {
-				if (value[k-1] == '.' || value[k-1] == '-') {
-					error++;
-				}
-				for (let j=0 ; j < k ; j++) {
-					if (value[j] == 'e' || value[j] =='E') {
-						error++;
-					}
-				}
-			}
-		} // Gestion des puissances
-		if (k == c-1) {
-			if (value[k] == 'e' || value[k] == 'E' || value[k] == '-' || value[k] == '.') {
-				error++;
-			}
-		}
-	}
-	if (error > 0) {
-		return false;
-	}
-	else {
-		return true;
-	}
-}
-
-function unitIs(input_element) {
-    var span = input_element.nextElementSibling;
-    if (span) {
-        return span.innerHTML;
-    }
-    else {
-        return null;
-    }
-}
-
-function belongsTo(element, isAltitudeSet, indexForm, min, max) {
-    var value = parseFloat(element.value);
-    var unit = unitIs(element);
-	var rayon = body[indexForm].radius;
-    if (unit == 'UA') {
-        min = convert(min, 'km');
-        max = convert(max, 'km');
-        rayon = convert(rayon, 'km');
-    }
-    if (unit == "rad") {
-        min = convert(min,'°');
-        max = convert(max, '°');
-    }
-    if (!isAltitudeSet) {
-        min += rayon;
-    }
-    if (value > max || value < min) {
-        return false;
-    }
-    else {
-        return true;
-    }
-}
-
-function isNull(element) {
-    var value = element.value;
-    if (value == '') {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-function swapAltitude(element, unit, isAltitudeSet, indexForm) {
-    var value = parseFloat(element.value);
-    if (indexForm == 2) {
-        return false
-    }
-    var rayon = body[indexForm].radius;
-    if (isNaN(value) || !isNumber(element, true)) {
-        element.value = '';
-        removeWarning(element);
-        return false;
-    }
-    if (isAltitudeSet) {
-        if (unit == 'km') {
-            value += rayon;
-        }
-        else {
-            value += rayon/UA;
-        }
-    }
-    else {
-        if (unit == 'km') {
-            value -= rayon;
-        }
-        else {
-            value -= rayon/UA;
-        }
-    }
-    element.value = value;
-}
-
-function setWarning(element, text) {
-    var div_parent = element.parentNode.parentNode.parentNode;
-    var div_hidden = div_parent.lastElementChild.lastElementChild;
-    div_parent.setAttribute('class', 'form-group has-error');
-    div_hidden.removeAttribute('hidden');
-    if (text) {
-        div_hidden.lastElementChild.innerHTML = text;
-    }
-}
-
-function removeWarning(element) {
-    var div_parent = element.parentNode.parentNode.parentNode;
-    var div_hidden = div_parent.lastElementChild.lastElementChild;
-    div_parent.setAttribute('class', 'form-group');
-    div_hidden.setAttribute('hidden', 'true');
-}
-
-function disable() {
-    for (let k = 0, c = arguments.length ; k < c ; k++) {
-        arguments[k].setAttribute('disabled', 'true');
-    }
-}
-
-function enable() {
-    for (let k = 0, c = arguments.length ; k < c ; k++) {
-        arguments[k].removeAttribute('disabled');
-    }
-}
-
-function reset() {
-    for (let k = 0, c = arguments.length ; k < c ; k++) {
-        arguments[k].value = '';
-        removeWarning(arguments[k]);
-    }
-}
-
+// Computing parameters
 function isEnough(indexForm) {
     var result=0;
     inputCheck[indexForm].forEach(function (element) {
@@ -249,7 +70,6 @@ function isEnough(indexForm) {
         return false;
     }
 }
-
 function isComputable(notNegative, indexForm) {
     var error = 0;
     for (let k=0, c = inputCheck[indexForm].length ; k < c ; k++) {
@@ -269,19 +89,10 @@ function isComputable(notNegative, indexForm) {
         return true;
     }
 }
-
-function setArgumentPeriapsis(indexForm, bypass) {
-    if (parseFloat(eccentricity[indexForm].value) == 0 || eccentricity[indexForm].value == '' || bypass) {
-        disable(argument_periapsis[indexForm]);
-        reset(argument_periapsis[indexForm]);
-        removeWarning(argument_periapsis[indexForm]);
-    }
-    else {
-        enable(argument_periapsis[indexForm]);
-    }
-}
-
-function compute(isAltitudeSet, indexForm) {
+function compute(isAltitudeSet, indexForm, isHyperbolic) {
+	if (isHyperbolic == undefined) {
+		isHyperbolic = false;
+	}
     var unit = unitIs(periapsis[indexForm]);
     var rayon = body[indexForm].radius;
     if (unit == 'UA') {
@@ -321,7 +132,7 @@ function compute(isAltitudeSet, indexForm) {
             var a = parseFloat(semi_majoraxis[indexForm].value);
             var Ap = 2*a - Pe;
             var e = (Ap-Pe)/(2*a);
-            if (Pe > Ap || Pe < critere) {
+            if ((Pe > Ap && !isHyperbolic) || Pe < critere) {
                 reset(apoapsis[indexForm], eccentricity[indexForm]);
                 setWarning(periapsis[indexForm], ' ');
                 setWarning(semi_majoraxis[indexForm], ' ');
@@ -389,7 +200,7 @@ function compute(isAltitudeSet, indexForm) {
             var e = parseFloat(eccentricity[indexForm].value);
             var Ap = a*(1+e);
             var Pe = a*(1-e);
-            if (Pe > Ap || Pe < critere) {
+            if ((Pe > Ap && !isHyperbolic) || Pe < critere) {
                 reset(apoapsis[indexForm], periapsis[indexForm]);
                 setWarning(semi_majoraxis[indexForm], ' ');
                 setWarning(eccentricity[indexForm], ' ');
@@ -402,7 +213,6 @@ function compute(isAltitudeSet, indexForm) {
             }
     }
 }
-
 function isSubmittable() {
 	var modalInputCheck = [modal_mass, radius, inclination[2], longitude[2], semi_majoraxis[2], eccentricity[2], argument_periapsis[2], true_anomaly[2]];
 	if (modal_name.value == '') {
@@ -415,8 +225,206 @@ function isSubmittable() {
 	}
 	return true;
 }
+	
+// Setting elements
+function swapAltitude(element, unit, isAltitudeSet, indexForm) {
+    var value = parseFloat(element.value);
+    if (indexForm == 2) {
+        return false
+    }
+    var rayon = body[indexForm].radius;
+    if (isNaN(value) || !isNumber(element, true)) {
+        element.value = '';
+        removeWarning(element);
+        return false;
+    }
+    if (isAltitudeSet) {
+        if (unit == 'km') {
+            value += rayon;
+        }
+        else {
+            value += rayon/UA;
+        }
+    }
+    else {
+        if (unit == 'km') {
+            value -= rayon;
+        }
+        else {
+            value -= rayon/UA;
+        }
+    }
+    element.value = value;
 }
-
+function setWarning(element, text) {
+    var div_parent = element.parentNode.parentNode.parentNode;
+    var div_hidden = div_parent.lastElementChild.lastElementChild;
+    div_parent.setAttribute('class', 'form-group has-error');
+    div_hidden.removeAttribute('hidden');
+    if (text) {
+        div_hidden.lastElementChild.innerHTML = text;
+    }
+}
+function removeWarning(element) {
+    var div_parent = element.parentNode.parentNode.parentNode;
+    var div_hidden = div_parent.lastElementChild.lastElementChild;
+    div_parent.setAttribute('class', 'form-group');
+    div_hidden.setAttribute('hidden', 'true');
+}
+function disable() {
+    for (let k = 0, c = arguments.length ; k < c ; k++) {
+        arguments[k].setAttribute('disabled', 'true');
+    }
+}
+function enable() {
+    for (let k = 0, c = arguments.length ; k < c ; k++) {
+        arguments[k].removeAttribute('disabled');
+    }
+}
+function reset() {
+    for (let k = 0, c = arguments.length ; k < c ; k++) {
+        arguments[k].value = '';
+        removeWarning(arguments[k]);
+    }
+}
+	
+// Math / physic test
+function isNumber(element, notNegative) {
+	var value = element.value;
+	var caracter = ['0','1','2','3','4','5','6','7','8','9','e','.', 'e', 'E', '+', '-'];
+	var error = 0;
+	for (let k=0, c=value.length ; k < c ; k++) {
+		if (!caracter.includes(value[k])) {
+			error++;
+		} // Faux si autres caractères que ceux acceptés
+		if (value[k] == '.') {
+			if (k == 0) {
+				error++;
+			}
+			else {
+				if (value[k-1] == '-') {
+					error++;
+				}
+				else {
+					for (let j=0 ; j < k ; j++) {
+						if (value[j] == 'e' || value[j] == 'E' || value[j] == '.') {
+							error++;
+						}
+					}
+				}
+			}
+		} // Gestion des coma
+		if (value[k] == '-') {
+			if (k == 0) {
+				if (notNegative) {
+					error++;
+				}
+			}
+			else {
+				if (value[k-1] != 'E' && value[k-1] != 'e') {
+				error++;
+				}
+			}
+		} // Gestion du négatif
+		if (value[k] == '+') {
+			if (k != 0) {
+				if (value[k-1] != 'E' && value[k-2] != 'e') {
+					error++;
+				}
+			}
+		} // Gestion du "+"
+		if (value[k] == 'e' || value[k] == 'E') {
+			if (k == 0) {
+				error++;
+			}
+			else {
+				if (value[k-1] == '.' || value[k-1] == '-') {
+					error++;
+				}
+				for (let j=0 ; j < k ; j++) {
+					if (value[j] == 'e' || value[j] =='E') {
+						error++;
+					}
+				}
+			}
+		} // Gestion des puissances
+		if (k == c-1) {
+			if (value[k] == 'e' || value[k] == 'E') {
+				error++;
+			}
+		}
+	}
+	if (error > 0) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+function unitIs(input_element) {
+    var span = input_element.nextElementSibling;
+    if (span) {
+        return span.innerHTML;
+    }
+    else {
+        return null;
+    }
+}
+function belongsTo(element, isAltitudeSet, indexForm, min, max) {
+    var value = parseFloat(element.value);
+    var unit = unitIs(element);
+	var rayon = body[indexForm].radius;
+    if (unit == 'UA') {
+        min = convert(min, 'km');
+        max = convert(max, 'km');
+        rayon = convert(rayon, 'km');
+    }
+    if (unit == "rad") {
+        min = convert(min,'°');
+        max = convert(max, '°');
+    }
+    if (!isAltitudeSet) {
+        min += rayon;
+    }
+    if (value > max || value < min) {
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+function isNull(element) {
+    var value = element.value;
+    if (value == '') {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+function scientific(value) {
+	var parts = value.toString().split('.');
+	var result;
+	// Integer part
+	var int = parts[0].length;
+	// Decimal part
+	var dec = parts[1].length;
+	if (int > 1) {
+		result = parts[0][0] + '.';
+		for (let k = 1 ; k < int && k < 15 ; k++) {
+			result += parts[0][k];
+		}
+		for (let k = 0, c = 15 - int ; k < dec && k < c; k++) {
+			result += parts[1][k];
+		}
+		result += 'e' + (int-1);
+		return result;
+	}
+	else {
+		return value;
+	}
+}
+}
 //Déclaration des events :
 // SELECT
 {
@@ -424,12 +432,14 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
     origine[indexForm].addEventListener('change', function() {
     body[indexForm] = origine[indexForm].value;
 	if (indexForm != 2) {
-    	parameter.forEach(function(element) {
+    	inputs.forEach(function(element) {
         	enable(element[indexForm]);
 			reset(element[indexForm]);
     	});
-    	reset(argument_periapsis[indexForm]);
-    	disable(argument_periapsis[indexForm]);
+		if (orbit_type[indexForm].value == 'Parabola') {
+			eccentricity[indexForm].value = 1;
+			disable(eccentricity[indexForm]);
+		}
     	inputCheck[indexForm] = [false, false, false, false];
 	}
     for (let k = 0, c = planets.length ; k < c ; k++) {
@@ -443,25 +453,34 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
 for (let indexForm = 0 ; indexForm < 2 ; indexForm++) {
 	orbit_type[indexForm].addEventListener('change', function() {
 		var type = orbit_type[indexForm].value;
-		var inputSet = apoapsis[indexForm].parentNode.parentNode.parentNode;
-		if (type == 'Hyperbolique') {
-			inputSet.setAttribute('hidden', 'true');
+		for (let k=0, c=parameter.length ; k < c ; k++) {
+			reset(parameter[k][indexForm]);
+			enable(parameter[k][indexForm]);
+		}
+		if (type == 'Hyperbola' || type == 'Parabola') {
+			apoapsis[indexForm].parentNode.parentNode.parentNode.setAttribute('hidden', 'true');
 		}
 		else {
-			inputSet.removeAttribute('hidden');
-		}
-		for (let k=0, c=inputs.length ; k < c ; k++) {
-			reset(inputs[k][indexForm]);
+			apoapsis[indexForm].parentNode.parentNode.parentNode.removeAttribute('hidden');
 		}
 		inputCheck[indexForm]=[false, false, false, false];
-	})
+		if (type == 'Parabola') {
+			eccentricity[indexForm].value = 1;
+			disable(eccentricity[indexForm]);
+			inputCheck[indexForm][3] = true;
+			semi_majoraxis[indexForm].parentNode.parentNode.parentNode.setAttribute('hidden', 'true');
+		}
+		else {
+			semi_majoraxis[indexForm].parentNode.parentNode.parentNode.removeAttribute('hidden');
+		}
+	});
 }
 }
 //INPUT
 {
 modal_mass.addEventListener('keyup', function() {
 	if (!isNumber(this, true)) {
-		setWarning(this, "Vous devez entrer un nombre positif !");
+		setWarning(this, "Mass MUST be a positive number !");
 	}
 	else {
 		removeWarning(this);
@@ -470,7 +489,7 @@ modal_mass.addEventListener('keyup', function() {
 
 radius.addEventListener('keyup', function() {
 	if (!isNumber(this, true)) {
-		setWarning(this, "Vous devez entrer un nombre positif !");
+		setWarning(this, "Radius MUST be a positive number !");
 	}
 	else {
 		removeWarning(this);
@@ -483,32 +502,21 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
     var min = -180;
     var max = 180;
     if (!isNumber(this)) {
-        setWarning(this,"Vous devez entrer un angle !");
-        disable(longitude[indexForm]);
-        reset(longitude[indexForm]);
+        setWarning(this,"You must set an angle !");
     }
     else {
         if (!belongsTo(this, true, indexForm, min, max)) {
             switch (unit) {
                 case '°':
-                    setWarning(this, "L'angle doit être compris entre -180° et 180° !");
+                    setWarning(this, "Inclination must lie between -180° and 180°");
                     break;
                 case 'rad':
-                    setWarning(this, "L'angle doit être compris entre -π et π rad !");
+                    setWarning(this, "Inclination must lie between -π and π rad");
             }
-            disable(longitude[indexForm]);
-            reset(longitude[indexForm]);
         }
         else {
             value = parseFloat(this.value);
             removeWarning(this);
-            if (isNull(this) || parseFloat(this.value) == 0 || this.value == '-') {
-                disable(longitude[indexForm]);
-                reset(longitude[indexForm]);
-            }
-            else {
-                enable(longitude[indexForm]);
-            }
         }
     }
 });
@@ -517,16 +525,16 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
     var min = 0;
     var max = 360;
     if (!isNumber(this, true)) {
-        setWarning(this,"Vous devez entrer un angle positif !");
+        setWarning(this,"You must set a positive angle !");
     }
     else {
         if (!belongsTo(this, true, indexForm, min, max)) {
             switch (unit) {
                 case '°':
-                    setWarning(this, "L'angle doit être compris entre 0° et 360° !");
+                    setWarning(this, "Longitude of Ascending Node must lie between 0° and 360°");
                     break;
                 case 'rad':
-                    setWarning(this, "L'angle doit être compris entre 0 et 2π rad !");
+                    setWarning(this, "Longitude of Ascending Node must lie between 0 and 2π rad");
             }
         }
         else {
@@ -546,16 +554,20 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
                     removeWarning(this);
                 }
                 else {
-                    setWarning(this, "L'orbite est sous la surface !")
+                    setWarning(this, "The orbit is under the surface !")
                 }
             }
             else {
-                setWarning(this, "Vous devez entrer un nombre positif !")
+                setWarning(this, "Semi major-axis must be a positive number")
             }
         }
-        setArgumentPeriapsis(indexForm);
         return false;
     }
+	var type = orbit_type[indexForm].value;
+	var isHyperbolic = false;
+	if (type == 'Hyperbola') {
+		isHyperbolic = true;
+	}
     if (isNull(this)) {
         removeWarning(this);
         for (let k = 0, c = inputCheck[indexForm].length ; k < c ; k++) {
@@ -585,17 +597,17 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
                     removeWarning(this);
                 }
                 else {
-                    setWarning(this, "L'orbite est sous la surface !")
+                    setWarning(this, "The orbit is under the surface !")
                 }
             }
             else {
-                setWarning(this, "Vous devez entrer un nombre positif !");
+                setWarning(this, "Semi major-axis must be a positive number");
             }
         }
         else {
-            if (isComputable(true, indexForm)) {
+            if ((isComputable(true, indexForm) && type == 'Ellipse') || (isComputable(false, indexForm) && type == 'Hyperbola')) {
                 removeWarning(this);
-                compute(isAltitudeSet, indexForm);
+                compute(isAltitudeSet, indexForm, isHyperbolic);
             }
             else {
                 for (let k = 0, c = inputCheck[indexForm].length ; k < c ; k++) {
@@ -603,35 +615,27 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
                         reset(parameter[k][indexForm]);
                     }
                 }
-                if (isNumber(this, true)) {
+                if ((isNumber(this, true) && type == 'Ellipse') || (isNumber(this, false) && type == 'Hyperbola')) {
                     if (belongsTo(this, false, indexForm, 0)) {
                         removeWarning(this);
                     }
                     else {
-                        setWarning(this, "L'orbite est sous la surface !")
+                        setWarning(this, "The orbit is under the surface !")
                     }
                 }
                 else {
-                    setWarning(this, "Vous devez entrer un nombre positif !");
+                    setWarning(this, "Semi major-axis must be a positive number");
                 }
             }
         }
     }
-    setArgumentPeriapsis(indexForm);
 });
 	eccentricity[indexForm].addEventListener('keyup', function() {
-    var bypass = false;
+	// Define if the orbit is an ellipse/parabola (true) or hyperbola (false)
 	if (indexForm != 2) {
-		if (orbit_type[indexForm].value == "Hyperbolique") {
-			var type = false;
-		}
-		else {
-			var type = true;
-		}
+		var type = orbit_type[indexForm].value;
 	}
-	else {
-		var type = true;
-	}
+	// For modal only (with return at the end)
     if (indexForm == 2) {
         if (isNull(this)) {
             removeWarning(this);
@@ -643,22 +647,21 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
                 }
                 else {
 					if (type) {
-						setWarning(this, "Ce n'est pas une orbite elliptique !");
+						setWarning(this, "You set a non-elliptic trajectory");
 					}
 					else {
-						setWarning(this, "Ce n'est pas une orbite hyperbolique !");
+						setWarning(this, "You set a non-hyperbolic trajectory");
 					}
-                    bypass = true;
                 }
             }
             else {
-				setWarning(this, "Vous devez entrer un nombre positif !");
-                bypass = true;
+				setWarning(this, "Eccentricity must be a positive number");
             }
         }
-        setArgumentPeriapsis(indexForm, bypass);
         return false;
     }
+		
+	// For other forms
     if (isNull(this)) {
         removeWarning(this);
         for (let k = 0, c = inputCheck[indexForm].length ; k < c ; k++) {
@@ -672,35 +675,36 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
         }
         inputCheck[indexForm][3] = false;
     }
+	// Filling eccentricity input :
     else {
         inputCheck[indexForm][3] = true;
         var unit = unitIs(this);
         var isAltitudeSet = false;
+		// Altitude or distance from the center
         if (periapsis[indexForm].parentNode.parentNode.parentNode.firstElementChild.getAttribute('class') == 'altitude') {
             isAltitudeSet = true;
         }
+		
+		// Then :
         if (!isEnough(indexForm)) {
             for (let k = 0, c = inputCheck[indexForm].length ; k < c ; k++) {
                 enable(parameter[k][indexForm]);
             }
             if (isNumber(this, true)) {
-				if ((belongsTo(this, true, indexForm, 0, 1) && type) || (belongsTo(this, true, indexForm, 1) && !type)) {
+				if (((belongsTo(this, true, indexForm, 0, 1) && type == 'Ellipse') || (belongsTo(this, true, indexForm, 1) && type == "Hyperbola")) && this.value != 1) {
                     removeWarning(this);
                 }
                 else {
-					if (type) {
-						setWarning(this, "Ce n'est pas une orbite elliptique !");
+					if (type == 'Ellipse') {
+						setWarning(this, "You set a non-elliptic trajectory");
 					}
 					else {
-						setWarning(this, "Ce n'est pas une orbite hyperbolique !");
+						setWarning(this, "You set a non-hyperbolic trajectory");
 					}
-                    bypass = true;
-					setArgumentPeriapsis(indexForm, true);
                 }
             }
             else {
-                setWarning(this, "Vous devez entrer un nombre positif !");
-                bypass = true;
+                setWarning(this, "Eccentricity must be a positive number");
             }
         }
         else {
@@ -715,39 +719,35 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
                     }
                 }
                 if (isNumber(this, true)) {
-                    if (belongsTo(this, true, indexForm, 0, 1)) {
+                    if (((belongsTo(this, true, indexForm, 0, 1) && type == 'Ellipse') || (belongsTo(this, true, indexForm, 1) && type == "Hyperbola")) && this.value != 1) {
                         removeWarning(this);
                     }
-                    else {
-                        
-                        setWarning(this, "Ce n'est pas une orbite elliptique !");
-                        bypass = true;
+                    else if (type == 'Ellipse') {
+                        setWarning(this, "You set a non-elliptic trajectory");
                     }
-                }
-                else {
-                    setWarning(this, "Vous devez entrer un nombre positif !");
-                    bypass = true;
+					else {
+						setWarning(this, "You set a non-hyperbolic trajectory");
+					}
                 }
             }
         }
     }
-    setArgumentPeriapsis(indexForm, bypass);
 });
 	argument_periapsis[indexForm].addEventListener('keyup', function() {
     var unit = unitIs(this);
     var min = 0;
     var max = 360;
     if (!isNumber(this, true)) {
-        setWarning(this,"Vous devez entrer un angle positif !");
+        setWarning(this,"Argument of periapsis must be a positive angle !");
     }
     else {
         if (!belongsTo(this, true, indexForm, min, max)) {
             switch (unit) {
                 case '°':
-                    setWarning(this, "L'angle doit être compris entre 0° et 360° !");
+                    setWarning(this, "Argument of periapsis must lie between 0° and 360°");
                     break;
                 case 'rad':
-                    setWarning(this, "L'angle doit être compris entre 0 et 2π rad !");
+                    setWarning(this, "Argument of periapsis must lie between 0 and 2π rad");
             }
         }
         else {
@@ -761,16 +761,16 @@ for (let indexForm = 0 ; indexForm < 3 ; indexForm++) {
     var min = 0;
     var max = 360;
     if (!isNumber(this, true)) {
-        setWarning(this,"Vous devez entrer un angle positif !");
+        setWarning(this,"True anomaly must be a positive number !");
     }
     else {
         if (!belongsTo(this, true, indexForm, min, max)) {
             switch (unit) {
                 case '°':
-                    setWarning(this, "L'angle doit être compris entre 0° et 360° !");
+                    setWarning(this, "True anomaly must lie between 0° and 360°");
                     break;
                 case 'rad':
-                    setWarning(this, "L'angle doit être compris entre 0 et 2π rad !");
+                    setWarning(this, "True anomaly must lie between 0 and 2π rad");
             }
         }
         else {
@@ -812,11 +812,11 @@ for (let indexForm = 0 ; indexForm < 2 ; indexForm++) {
                     removeWarning(this);
                 }
                 else {
-                    setWarning(this, "Le périgée est sous la surface !")
+                    setWarning(this, "Periapsis is under the surface !")
                 }
             }
             else {
-                setWarning(this, "Vous devez entrer un nombre positif !");
+                setWarning(this, "Periapsis must be a positive number !");
             }
         }
         else {
@@ -835,16 +835,19 @@ for (let indexForm = 0 ; indexForm < 2 ; indexForm++) {
                         removeWarning(this);
                     }
                     else {
-                        setWarning(this, "Le périgée est sous la surface !")
+                        setWarning(this, "Periapsis is under the surface !")
                     }
                 }
                 else {
-                    setWarning(this, "Vous devez entrer un nombre positif !");
+                    setWarning(this, "Periapsis must be a positive number !");
                 }
             }
         }
     }
-    setArgumentPeriapsis(indexForm);
+	if (orbit_type[indexForm].value == 'Parabola') {
+		eccentricity[indexForm].value == 1;
+		disable(eccentricity[indexForm]);
+	}
 });
 	apoapsis[indexForm].addEventListener('keyup', function() {
     if (isNull(this)) {
@@ -876,11 +879,11 @@ for (let indexForm = 0 ; indexForm < 2 ; indexForm++) {
                     removeWarning(this);
                 }
                 else {
-                    setWarning(this, "L'apogée est sous la surface !")
+                    setWarning(this, "Apoapsis is under the surface !")
                 }
             }
             else {
-                setWarning(this, "Vous devez entrer un nombre positif !");
+                setWarning(this, "Apoapsis must be a positive number !");
             }
         }
         else {
@@ -899,21 +902,39 @@ for (let indexForm = 0 ; indexForm < 2 ; indexForm++) {
                         removeWarning(this);
                     }
                     else {
-                        setWarning(this, "L'apogée est sous la surface !")
+                        setWarning(this, "Apoapsis is under the surface !")
                     }
                 }
                 else {
-                    setWarning(this, "Vous devez entrer un nombre positif !");
+                    setWarning(this, "Apoapsis must be a positive number !");
                 }
             }
         }
     }
-    setArgumentPeriapsis(indexForm);
 });
 }
 }
 // SPAN
 {
+	
+menu.forEach(function(element) {
+	element.addEventListener('click', function() {
+		var text = this.nextElementSibling;
+		var menu_right = this.firstElementChild;
+		var menu_down = menu_right.nextElementSibling;
+		if (text.getAttribute('hidden')) {
+			menu_right.setAttribute('hidden', 'true');
+			menu_down.removeAttribute('hidden');
+			text.removeAttribute('hidden');
+		}
+		else {
+			text.setAttribute('hidden', 'true');
+			menu_right.removeAttribute('hidden');
+			menu_down.setAttribute('hidden', 'true');
+		}
+		
+	});
+});
 angular_unit.forEach(function(element) {
     element.addEventListener('click', function() {
         var unit = this.innerHTML;
@@ -971,6 +992,20 @@ for (let indexForm = 0 ; indexForm < 2 ; indexForm++) {
     });
 });
 }
+	
+window_unit.addEventListener('click', function() {
+	for (let k=0, c = range.length ; k < c ; k++) {
+		if (range[k] == window_unit.innerHTML) {
+			if (k < c-1) {
+				window_unit.innerHTML = range[k+1];
+			}
+			else {
+				window_unit.innerHTML = range[0];
+			}
+			return true;
+		}
+	}
+})
 }
 // BUTTON
 {
@@ -1022,8 +1057,6 @@ for (let indexForm = 0; indexForm < 2 ; indexForm++) {
             reset(inputs[k][indexForm]);
             removeWarning(inputs[k][indexForm]);
         }
-        disable(longitude[indexForm]);
-        disable(argument_periapsis[indexForm]);
         inputCheck[indexForm] = [false, false, false, false];
         origine[indexForm].selectedIndex = optiondefault[indexForm].index;
         alt[indexForm].forEach(function(element) {
@@ -1056,10 +1089,8 @@ for (let indexForm = 0; indexForm < 2 ; indexForm++) {
 		infoSection.innerHTML = text;
 	});
 }
-	
-	
-	
 }
+	
 // revoir les modals qui sont moches
 // retirer le blocage de w et W (en raison de la précision des unités)
 // bloquer la précision des unités à 10e-15 ? avec une fonction ou directement via isNumber (arrondi dans isNumber) ou alors arrondir les résultats computés, directement en manipulant l'input ?
