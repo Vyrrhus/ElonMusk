@@ -4,7 +4,11 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=3"/>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+    
+    <link href="stylesheet/bootstrap.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-108055524-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -12,42 +16,36 @@
 		gtag('js', new Date());
 		gtag('config', 'UA-108055524-1');
 	</script>
-    <link href="stylesheet/bootstrap.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
     <title>Interplanetary travelling</title>
     <link href = "img/icon_rocket.png" rel="icon">
+	<style> [class*="col-"]{position: inherit;} </style>
 </head>
   
 <body>
 	<div class="container">
 		<header class="page-header">
-			<h1> Interplanetary travelling tool <small>powered by Vyrrhus</small></h1>
-			<p> Non perturbed Keplerian orbits
-			</p>
+			<h1> Interplanetary travelling tool<small> powered by Vyrrhus</small></h1>
+			<h2><small> Application for Kepler's planetary motion</small></h2>
 		</header>
 
 		<div id="position" class="row">
 			<div class="col-lg-12">
 				<section>
-					<h3> What is that for ? </h3>
+					<h3 name="menu"><div hidden="true"><span class="glyphicon glyphicon-menu-right"></span> What is that for ?</div><div><span class="glyphicon glyphicon-menu-down"></span> What is that for ?</div></h3>
 					<p class="text-justify">
 						Thanks to this tool, one can get all the data needed to choose the best path between two positions in our solar system, using what is known as <strong>Lambert's problem</strong> :
-					</p>
-					<blockquote>
-						<p class="text-justify">Given both the starting and the ending position, and the time of flight, hence the velocity of the body or spacecraft related to these positions, and thus the transfer orbit.</p>
-						<footer>Lambert's problem</footer>
-					</blockquote>
-					<p class="text-justify">
+						<br>
+						Given both the starting and the ending position, and the <strong>ToF</strong> (time of flight), hence the velocity of the spacecraft related to these potisitons, thus its transfert orbit.
+						<br>
 						Solving this problem requires to neglect a lot of elements, called <strong>perturbations</strong> : these are the effect of planet's oblateness, the drag of the atmosphere, the influence of a third body, the solar radiation...
 						<br>
 						This way, we will be able to compute the trajectory of a body, according to Newtonian mechanics and <strong>Kepler's laws of motion</strong>, that is, conic section orbits such as hyperbola, circle or ellipse.
 						<br>
 						In order to compute an interplanetary travel, we will consider that the body considered is going through several orbits inside each planet's area, the <strong>sphere of influence</strong>.
 					</p>
-					<h3> More</h3>
-					<p class="text-justify">
+					<h3 name="menu"><div><span class="glyphicon glyphicon-menu-right"></span> More</div><div hidden="true"><span class="glyphicon glyphicon-menu-down"></span> More</div></h3>
+					<p class="text-justify" hidden="true">
 						For now, one can find out all the data needed about orbital parameters, filling the different forms ; it is also possible to use the Lambert's method in order to find a convenient orbit for a rendez-vous between the departure and the arrival forms.
 						<br>
 						Later, the Interplanetary travelling tool will be able to compute the whole interplanetary trajectory and even schedule gravitational assist (fly-by).
@@ -58,8 +56,8 @@
 						<br>
 						Precision of the simulation is a big issue, thus it will increase regarding the many algorithms used, such as the Newton-Raphson method (replaced by the bi-section one ?) in order to improve robustness. 
 					</p>
-					<h3> Instructions </h3>
-					<ol class="text-justify">
+					<h3 name=menu><div><span class="glyphicon glyphicon-menu-right"></span> Instructions</div><div hidden="true"><span class="glyphicon glyphicon-menu-down"></span> Instructions</div></h3>
+					<ol class="text-justify" hidden="true">
 						<li>Fill the departure form and the arrival forms  </li>
 						<li>You can add a body if it doesn't appear in the list, although it will last until the end of your session. You can switch the units (i.e. km, UA, rad, °) </li>
 						<li>Choose your departure date and a window for the launch : that will be useful for a porkshop plot ! </li>
@@ -82,7 +80,7 @@
 					<form id="form_start" class="form-horizontal">
 						<div class="row">
 							<div class="form-group">
-								<h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1">Orbite de départ
+								<h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1">Departure orbit
 								<div class="pull-right">
 								<button class="btn btn-default" type="button" id="reset"><span class="glyphicon glyphicon-refresh"></span></button>
 								</div>
@@ -94,7 +92,7 @@
 						<fieldset class="row">
 							<div class="form-group">
 								<div id="origine_group" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="origine">Origine</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="origine">Origin</label>
 									<div id="origine_div" class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<select id="origine" class="form-control">
                             				<option>Soleil</option>
@@ -133,11 +131,12 @@
 								<!-- Select pour choisir le referenceBody -->
 								
 								<div id="type_orbit_group" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="orbit_type">Type orbite</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="orbit_type">Orbit type</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<select id="orbit_type" class="form-control">
-											<option selected>Elliptique</option>
-											<option>Hyperbolique</option>
+											<option selected>Ellipse</option>
+											<option>Parabola</option>
+											<option>Hyperbola</option>
 										</select>
 									</div>
 								</div>
@@ -159,14 +158,14 @@
 						<fieldset class="row">
 							<div class="form-group">
 								<div id="inclination" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_inclination">Inclinaison</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_inclination">Inclination</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_inclination" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
-											<p class="help-block">Vous devez entrer un angle entre -180° et 180° !</p>
+										<div hidden="true">
+											<p class="help-block">Inclination must lie between -180° and 180°</p>
 										</div>
 									</div>
 									
@@ -174,16 +173,16 @@
 								<!-- Input inclinaison -->
 								
 								<div id="longitude" class="form-group">
-									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_longitude">Longitude du NA</label>
-									<label class="visible-sm col-sm-4 control-label" for="input_longitude">Long. du NA</label>
+									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_longitude">Longitude of AN</label>
+									<label class="visible-sm col-sm-4 control-label" for="input_longitude">Long. of AN</label>
 									<label class="visible-xs col-xs-4 control-label" for="input_longitude">&Omega;</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_longitude" class="form-control" type="text" disabled="true">
+											<input id="input_longitude" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
-										<p class="help-block">Vous devez entrer un angle entre 0° et 360° !</p>
+										<div hidden="true">
+										<p class="help-block">Longitude of AN must lie between 0° and 360° !</p>
 										</div>
 									</div>
 									
@@ -191,14 +190,14 @@
 								<!-- Input longitude du noeud ascendant -->
 								
 								<div id="periapsis" class="form-group">
-									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Périgée</label></span>
+									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Periapsis</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_periapsis" class="form-control" type="text" placeholder="Altitude">
 											<span class="input-group-addon" name="length_unit_ini">km</span>
 										</div>
 										<div hidden="true">
-										<p class="help-block">Vous devez entrer un nombre positif !</p>
+										<p class="help-block">Periapsis must be a positive number !</p>
 										</div>
 									</div>
 									
@@ -206,14 +205,14 @@
 								<!-- Input periapsis -->
 								
 								<div id="apoapsis" class="form-group">
-									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apogée</label></span>
+									<span name="alt_start" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apoapsis</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_apoapsis" class="form-control" type="text" placeholder="Altitude">
 											<span class="input-group-addon" name="length_unit_ini">km</span>
 										</div>
-										<div hidden>
-											<p class="help-block">Vous devez entrer un nombre positif !</p>
+										<div hidden="true">
+											<p class="help-block">Apoapsis must be a positive number !</p>
 										</div>
 									</div>
 									
@@ -221,28 +220,28 @@
 								<!-- Input apoapsis -->
 								
 								<div id="semi_majoraxis" class="form-group">
-									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_semi_majoraxis">Demi grand-axe</label>
+									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_semi_majoraxis">Semi major-axis</label>
 									<label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_semi_majoraxis">a</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_semi_majoraxis" class="form-control" type="text">
 											<span class="input-group-addon" name="length_unit_ini">km</span>
 										</div>
-										<div hidden>
-											<p class="help-block">Vous devez entrer un nombre positif !</p>
+										<div hidden="true">
+											<p class="help-block">Semi major-axis must be a positive number !</p>
 										</div>
 									</div>
 								</div>
 								<!-- Input demi grand-axe -->
 								
 								<div id="eccentricity" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_eccentricity">Excentricité</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_eccentricity">Eccentricity</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
 											<input id="input_eccentricity" class="form-control" type="text">
 										</div>
-										<div hidden>
-											<p class="help-block">Vous devez entrer un nombre entre 0 et 1 !</p>
+										<div hidden="true">
+											<p class="help-block">Eccentricity must lie between 0 and 1 !</p>
 										</div>
 									</div>
 									
@@ -250,15 +249,15 @@
 								<!-- Input eccentricity -->
 								
 								<div id="argument_periapsis" class="form-group">
-									<label class="col-lg-4 visible-lg control-label" for="input_argument_periapsis">Argument du périgée</label>
+									<label class="col-lg-4 visible-lg control-label" for="input_argument_periapsis">Argument of periapsis</label>
 									<label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="input_argument_periapsis">&omega;</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_argument_periapsis" class="form-control" type="text" disabled="true">
+											<input id="input_argument_periapsis" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
-											<p class="help-block">Vous devez entrer un angle entre 0° et 360° !</p>
+										<div hidden="true">
+											<p class="help-block">Angle of the periapsis must lie between 0° and 360°</p>
 										</div>
 									</div>
 									
@@ -266,15 +265,15 @@
 								<!-- Input argument du periapsis -->
 								
 								<div id="true_anomaly" class="form-group">
-									<label class="col-lg-4 col-md-4 visible-lg visible-md control-label" for="input_true_anomaly">Anomalie vraie</label>
+									<label class="col-lg-4 col-md-4 visible-lg visible-md control-label" for="input_true_anomaly">True anomaly</label>
 									<label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_argument_periapsis">&nu;</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_true_anomaly" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
-											<p class="help-block">Vous devez entrer un angle entre 0° et 360° !</p>
+										<div hidden="true">
+											<p class="help-block">True anomaly must lie between 0° et 360° !</p>
 										</div>
 									</div>
 								</div>
@@ -292,7 +291,7 @@
 					<form id="form_end" class="form-horizontal">
 						<div class="row">
 							<div class="form-group">
-								<h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1">Orbite d'arrivée
+								<h3 class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1">Arrival orbit
 								<div class="pull-right">
 								<button class="btn btn-default" type="button" id="reset"><span class="glyphicon glyphicon-refresh"></span></button>
 								</div>
@@ -304,7 +303,7 @@
 						<fieldset class="row">
 							<div class="form-group">
 								<div id="origine_group" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="origine">Origine</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="origine">Origin</label>
 									<div id="origine_div" class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<select id="origine" class="form-control">
                             				<option>Soleil</option>
@@ -343,11 +342,12 @@
 								<!-- Select pour choisir le referenceBody -->
 								
 								<div id="type_orbit_group" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="orbit_type">Type orbite</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="orbit_type">Orbit type</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<select id="orbit_type" class="form-control">
-											<option selected>Elliptique</option>
-											<option>Hyperbolique</option>
+											<option selected>Ellipse</option>
+											<option>Parabola</option>
+											<option>Hyperbola</option>
 										</select>
 									</div>
 								</div>
@@ -369,13 +369,13 @@
 						<fieldset class="row">
 							<div class="form-group">
 								<div id="inclination" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_inclination">Inclinaison</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_inclination">Inclination</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_inclination" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
+										<div hidden="true">
 											<p class="help-block">Vous devez entrer un angle entre -180° et 180° !</p>
 										</div>
 									</div>
@@ -383,15 +383,15 @@
 								<!-- Input inclinaison -->
 								
 								<div id="longitude" class="form-group">
-									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_longitude">Longitude du NA</label>
-									<label class="visible-sm col-sm-4 control-label" for="input_longitude">Long. du NA</label>
+									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_longitude">Longitude of AN</label>
+									<label class="visible-sm col-sm-4 control-label" for="input_longitude">Long. of AN</label>
 									<label class="visible-xs col-xs-4 control-label" for="input_longitude">&Omega;</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_longitude" class="form-control" type="text" disabled="true">
+											<input id="input_longitude" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
+										<div hidden="true">
 										<p class="help-block">Vous devez entrer un angle entre 0° et 360° !</p>
 										</div>
 									</div>
@@ -400,7 +400,7 @@
 								<!-- Input longitude du noeud ascendant -->
 								
 								<div id="periapsis" class="form-group">
-									<span name="alt_end" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Périgée</label></span>
+									<span name="alt_end" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_periapsis" rel="popover" data-toggle="tooltip" title="Altitude">Periapsis</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_periapsis" class="form-control" type="text" placeholder="Altitude">
@@ -415,13 +415,13 @@
 								<!-- Input periapsis -->
 								
 								<div id="apoapsis" class="form-group">
-									<span name="alt_end" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apogée</label></span>
+									<span name="alt_end" class="altitude"><label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_apoapsis" rel="popover" data-toggle="tooltip" title="Altitude">Apoapsis</label></span>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_apoapsis" class="form-control" type="text" placeholder="Altitude">
 											<span class="input-group-addon" name="length_unit_fin">km</span>
 										</div>
-										<div hidden>
+										<div hidden="true">
 											<p class="help-block">Vous devez entrer un nombre positif !</p>
 										</div>
 									</div>
@@ -430,14 +430,14 @@
 								<!-- Input apoapsis -->
 								
 								<div id="semi_majoraxis" class="form-group">
-									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_semi_majoraxis">Demi grand-axe</label>
+									<label class="col-lg-4 col-md-4 hidden-sm hidden-xs control-label" for="input_semi_majoraxis">Semi major-axis</label>
 									<label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_semi_majoraxis">a</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_semi_majoraxis" class="form-control" type="text">
 											<span class="input-group-addon" name="length_unit_fin">km</span>
 										</div>
-										<div hidden>
+										<div hidden="true">
 											<p class="help-block">Vous devez entrer un nombre positif !</p>
 										</div>
 									</div>
@@ -445,12 +445,12 @@
 								<!-- Input demi grand-axe -->
 								
 								<div id="eccentricity" class="form-group">
-									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_eccentricity">Excentricité</label>
+									<label class="col-lg-4 col-md-4 col-sm-4 col-xs-4 control-label" for="input_eccentricity">Eccentricity</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
 											<input id="input_eccentricity" class="form-control" type="text">
 										</div>
-										<div hidden>
+										<div hidden="true">
 											<p class="help-block">Vous devez entrer un nombre entre 0 et 1 !</p>
 										</div>
 									</div>
@@ -459,14 +459,14 @@
 								<!-- Input eccentricity -->
 								
 								<div id="argument_periapsis" class="form-group">
-									<label class="col-lg-4 visible-lg control-label" for="input_argument_periapsis">Argument du périgée</label>
+									<label class="col-lg-4 visible-lg control-label" for="input_argument_periapsis">Argument of periapsis</label>
 									<label class="hidden-lg col-md-4 col-sm-4 col-xs-4 control-label" for="input_argument_periapsis">&omega;</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
-											<input id="input_argument_periapsis" class="form-control" type="text" disabled="true">
+											<input id="input_argument_periapsis" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
+										<div hidden="true">
 											<p class="help-block">Vous devez entrer un angle entre 0° et 360° !</p>
 										</div>
 									</div>
@@ -475,14 +475,14 @@
 								<!-- Input argument du periapsis -->
 								
 								<div id="true_anomaly" class="form-group">
-									<label class="col-lg-4 col-md-4 visible-lg visible-md control-label" for="input_true_anomaly">Anomalie vraie</label>
+									<label class="col-lg-4 col-md-4 visible-lg visible-md control-label" for="input_true_anomaly">True anomaly</label>
 									<label class="hidden-lg hidden-md col-sm-4 col-xs-4 control-label" for="input_argument_periapsis">&nu;</label>
 									<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
 										<div class="input-group">
 											<input id="input_true_anomaly" class="form-control" type="text">
 											<span class="input-group-addon" name="angular_unit">°</span>
 										</div>
-										<div hidden>
+										<div hidden="true">
 											<p class="help-block">Vous devez entrer un angle entre 0° et 360° !</p>
 										</div>
 									</div>
@@ -523,7 +523,9 @@
 								<div class="form-group">
 									<label class="col-lg-2 col-md-2 cold-sm-2 col-xs-2 control-label" for="departure">Departure</label>
 									<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 input-group">
-										<input id="departure" class="form-control" type="date">
+										<input id="departure" class="form-control" type="date" value="2017-10-22">
+										<span class="input-group-addon"> - </span>
+										<input id="departure_hour" class="form-control" type="time" value="12:00">
 									</div>
 								</div>
 								<!-- departure date yyyy mm jj -->
@@ -532,7 +534,7 @@
 									<label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 control-label" for="window_range">Window</label>
 									<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 input-group">
 										<input id="window_range" class="form-control" type="number" min="0">
-										<span class="input-group-addon">days</span>
+										<span id="window_unit" class="input-group-addon">days</span>
 									</div>
 								</div>
 								<!-- window range (days) -->
@@ -549,9 +551,83 @@
 				<button class="btn btn-default" type="button" id="plot"> PLOT !</button>
 			</div>
 		</div>
-		<div class="row">
-			<h3>Plot experiments</h3>
-			<canvas id="canvas"></canvas>
+		
+		<div class="row" name="plot & values">
+			<h3>Results</h3>
+			<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+				<div id="graph"></div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+				<h4>Delta-V requirements</h4>
+				<h5><strong>Departure</strong></h5>
+				<table>
+					<tr>
+						<td>Date :  </td>
+						<td id="dep_table_date"></td>
+					</tr>
+					<tr>
+						<td>Initial velocity :</td>
+						<td id="dep_table_initialVelocity" data-toggle="popover" data-html="true" data-trigger="hover" title="Initial velocity vector"></td>
+					</tr>
+					<tr>
+						<td>Manoeuver velocity :   </td>
+						<td id="dep_table_manoeuverVelocity" data-toggle="popover" data-html="true" data-trigger="hover" title="Manoeuver velocity vector"></td>
+					</tr>
+					<tr>
+						<td>Final velocity :</td>
+						<td id="dep_table_finalVelocity" data-toggle="popover" data-html="true" data-trigger="hover" title="Final velocity vector"></td>
+					</tr>
+				</table>
+				<h5><strong>Arrival</strong></h5>
+				<table>
+					<tr>
+						<td>Date : </td>
+						<td id="arr_table_date"></td>
+					</tr>
+					<tr>
+						<td>Initial velocity :</td>
+						<td id="arr_table_initialVelocity" data-toggle="popover" data-html="true" data-trigger="hover" title="Initial velocity vector"></td>
+					</tr>
+					<tr>
+						<td>Manoeuver velocity :   </td>
+						<td id="arr_table_manoeuverVelocity" data-toggle="popover" data-html="true" data-trigger="hover" title="Manoeuver velocity vector"></td>
+					</tr>
+					<tr>
+						<td>Final velocity :</td>
+						<td id="arr_table_finalVelocity" data-toggle="popover" data-html="true" data-trigger="hover" title="Final velocity vector"></td>
+					</tr>
+				</table>
+				<h5><strong>Total dV</strong></h5>
+				<table>
+					<tr>
+						<td>dV : </td>
+						<td id="table_dV"></td>
+					</tr>
+				</table>
+				<h4>Transfer orbit parameters</h4>
+				<table>
+					<tr>
+						<td>i (°) :</td>
+						<td id="table_i"></td>
+					</tr>
+					<tr>
+						<td>&Omega; (°) :</td>
+						<td id="table_longitude"></td>
+					</tr>
+					<tr>
+						<td>e :</td>
+						<td id="table_e"></td>
+					</tr>
+					<tr>
+						<td>a (km) :   </td>
+						<td id="table_a"></td>
+					</tr>
+					<tr>
+						<td>&omega; (°) :</td>
+						<td id="table_argument"></td>
+					</tr>
+				</table>
+			</div>
 		</div>
 		
 
@@ -795,7 +871,11 @@
 	<script src="javascript/class.js"></script>
 	<script src="javascript/database.js"></script>
 	<script src="javascript/orbit_determination.js"></script>
+	<script src="javascript/patched_conics.js"></script>
 	<script src="javascript/form.js"></script>
+	<script src="javascript/plot.js"></script>
 	
+	
+
 </body>
 </html>
